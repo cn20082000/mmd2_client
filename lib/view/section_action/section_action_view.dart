@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:mmd2/data/client/action_client.dart';
 import 'package:mmd2/data/model/action_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
-import 'package:mmd2/view/action/action_form_view.dart';
-import 'package:mmd2/view/action/action_item_view.dart';
-import 'package:mmd2/view/custom/section_navigator.dart';
-import 'package:mmd2/view/custom/section_screen.dart';
+import 'package:mmd2/view/custom/navigation/section_navigator.dart';
+import 'package:mmd2/view/custom/navigation/section_screen.dart';
+import 'package:mmd2/view/section_action/widgets/action_form_view.dart';
+import 'package:mmd2/view/section_action/widgets/action_item_view.dart';
 
-class ActionView extends StatefulWidget {
-  const ActionView({super.key});
+class SectionActionView extends StatefulWidget {
+  const SectionActionView({super.key});
 
   @override
-  State<ActionView> createState() => _ActionViewState();
+  State<SectionActionView> createState() => _SectionActionViewState();
 }
 
-class _ActionViewState extends State<ActionView> {
+class _SectionActionViewState extends State<SectionActionView> {
   final actionClient = ActionClient();
 
   bool isLoading = false;
@@ -39,12 +39,11 @@ class _ActionViewState extends State<ActionView> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Expanded(
-              child: Text(
-                "Actions",
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+            Text(
+              "Actions",
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
+            const Spacer(),
             const SizedBox(width: 16),
             IconButton(
               tooltip: "Refresh",

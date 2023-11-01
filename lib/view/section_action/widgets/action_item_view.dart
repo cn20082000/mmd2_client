@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mmd2/data/model/action_model.dart';
-import 'package:mmd2/view/custom/basic_item.dart';
+import 'package:mmd2/util/extension/text_style_extension.dart';
+import 'package:mmd2/view/custom/list/basic_item.dart';
 
 class ActionItemView extends StatelessWidget {
   final ActionModel item;
@@ -25,7 +26,7 @@ class ActionItemView extends StatelessWidget {
                 ),
                 Text(
                   item.description ?? "",
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium?.grey,
                 ),
               ],
             ),

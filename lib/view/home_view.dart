@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mmd2/view/action/action_view.dart';
-import 'package:mmd2/view/author/author_view.dart';
-import 'package:mmd2/view/character/character_view.dart';
-import 'package:mmd2/view/custom/navigation_button.dart';
-import 'package:mmd2/view/song/song_view.dart';
-import 'package:mmd2/view/video/video_view.dart';
+import 'package:mmd2/view/custom/navigation/navigation_button.dart';
+import 'package:mmd2/view/section_action/section_action_view.dart';
+import 'package:mmd2/view/section_author/section_author_view.dart';
+import 'package:mmd2/view/section_character/section_character_view.dart';
+import 'package:mmd2/view/section_song/section_song_view.dart';
+import 'package:mmd2/view/section_video/section_video_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -73,8 +73,8 @@ class _HomeViewState extends State<HomeView> {
                 VideoView(),
                 AuthorView(),
                 SongView(),
-                CharacterView(),
-                ActionView(),
+                SectionCharacterView(),
+                SectionActionView(),
               ],
             ),
           )

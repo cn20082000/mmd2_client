@@ -1,13 +1,13 @@
 import 'package:mmd2/data/model/base_model.dart';
 
-class ActionModel extends IToJson {
+class WorldModel extends IToJson {
   String? id;
   String? name;
   String? description;
 
-  ActionModel({this.id, this.name, this.description});
+  WorldModel({this.id, this.name, this.description});
 
-  factory ActionModel.fromJson(Map<String, dynamic> json) => ActionModel(
+  factory WorldModel.fromJson(Map<String, dynamic> json) => WorldModel(
         id: json["id"] as String?,
         name: json["name"] as String?,
         description: json["description"] as String?,
