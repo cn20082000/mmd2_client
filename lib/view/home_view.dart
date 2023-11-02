@@ -72,7 +72,7 @@ class _HomeViewState extends State<HomeView> {
               children: const [
                 VideoView(),
                 AuthorView(),
-                SongView(),
+                SectionSongView(),
                 SectionCharacterView(),
                 SectionActionView(),
               ],

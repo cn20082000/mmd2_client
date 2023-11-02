@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mmd2/data/model/character_model.dart';
-import 'package:mmd2/data/model/world_model.dart';
+import 'package:mmd2/data/model/producer_model.dart';
+import 'package:mmd2/data/model/song_model.dart';
 
-class CharacterFormView extends StatefulWidget {
+class SongFormView extends StatefulWidget {
   final String title;
-  final CharacterModel? item;
-  final List<WorldModel> worldList;
-  final void Function(CharacterModel)? onDone;
+  final SongModel? item;
+  final List<ProducerModel> producerList;
+  final void Function(SongModel)? onDone;
 
-  const CharacterFormView({super.key, required this.title, this.item, required this.worldList, this.onDone});
+  const SongFormView({super.key, required this.title, this.item, required this.producerList, this.onDone});
 
   @override
-  State<CharacterFormView> createState() => _CharacterFormViewState();
+  State<SongFormView> createState() => _SongFormViewState();
 }
 
-class _CharacterFormViewState extends State<CharacterFormView> {
+class _SongFormViewState extends State<SongFormView> {
   final nameCtrl = TextEditingController();
   final urlCtrl = TextEditingController();
   final descriptionCtrl = TextEditingController();
-  WorldModel? selectedWorld;
+  final selectedProducer = <ProducerModel>[];
 
   @override
   void initState() {
@@ -26,7 +26,8 @@ class _CharacterFormViewState extends State<CharacterFormView> {
     nameCtrl.text = widget.item?.name ?? "";
     urlCtrl.text = widget.item?.url ?? "";
     descriptionCtrl.text = widget.item?.description ?? "";
-    selectedWorld = widget.item?.world;
+    selectedProducer.clear();
+    selectedProducer.addAll(widget.item?.producers ?? []);
   }
 
   @override
@@ -67,35 +68,39 @@ class _CharacterFormViewState extends State<CharacterFormView> {
                 hintText: "Description",
               ),
               onSubmitted: (_) {
-                widget.onDone?.call(_buildCharacter);
+                widget.onDone?.call(_buildSong);
                 Navigator.pop(context);
               },
             ),
             PopupMenuButton(
-              itemBuilder: (_) => widget.worldList.map((e) => PopupMenuItem<WorldModel>(
+              itemBuilder: (_) => widget.producerList.map((e) => PopupMenuItem<ProducerModel>(
                 value: e,
                 child: Row(
                   children: [
                     SizedBox(
                       height: 16,
                       width: 16,
-                      child: e.id == selectedWorld?.id ? const Icon(Icons.check, size: 16) : null,
+                      child: selectedProducer.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
                     ),
                     const SizedBox(width: 8),
                     Text(e.name ?? ""),
                   ],
                 ),
               )).toList(),
-              initialValue: selectedWorld,
+              initialValue: selectedProducer.lastOrNull,
               onSelected: (result) {
                 setState(() {
-                  selectedWorld = result;
+                  if (selectedProducer.map((e) => e.id).contains(result.id)) {
+                    selectedProducer.removeWhere((element) => element.id == result.id);
+                  } else {
+                    selectedProducer.add(result);
+                  }
                 });
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
-                  selectedWorld?.name ?? "Select world",
+                  selectedProducer.isEmpty ? "Select producers" : selectedProducer.map((e) => e.name ?? "").join(", "),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
@@ -112,7 +117,7 @@ class _CharacterFormViewState extends State<CharacterFormView> {
         ),
         FilledButton(
           onPressed: () {
-            widget.onDone?.call(_buildCharacter);
+            widget.onDone?.call(_buildSong);
             Navigator.pop(context);
           },
           child: const Text("Done"),
@@ -121,11 +126,11 @@ class _CharacterFormViewState extends State<CharacterFormView> {
     );
   }
 
-  CharacterModel get _buildCharacter => CharacterModel(
+  SongModel get _buildSong => SongModel(
     id: widget.item?.id,
     name: nameCtrl.text.trim(),
     url: urlCtrl.text.trim(),
     description: descriptionCtrl.text.trim(),
-    world: selectedWorld,
+    producers: selectedProducer,
   );
 }
