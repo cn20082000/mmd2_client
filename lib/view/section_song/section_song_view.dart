@@ -5,6 +5,7 @@ import 'package:mmd2/data/model/song_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/navigation/section_navigator.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
+import 'package:mmd2/view/section_song/all_producer/all_producer_view.dart';
 import 'package:mmd2/view/section_song/widgets/song_form_view.dart';
 import 'package:mmd2/view/section_song/widgets/song_item_view.dart';
 
@@ -43,14 +44,13 @@ class _SectionSongViewState extends State<SectionSongView> {
           children: [
             Text(
               "Songs",
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headlineSmall,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(width: 16),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AllProducerView()));
+              },
               child: const Text("All producers >"),
             ),
             const Spacer(),
@@ -87,18 +87,17 @@ class _SectionSongViewState extends State<SectionSongView> {
               ),
               itemCount: songList.length,
               separatorBuilder: (_, __) => const SizedBox(height: 4),
-              itemBuilder: (_, index) =>
-                  SongItemView(
+              itemBuilder: (_, index) => SongItemView(
+                item: songList[index],
+                onEdit: () {
+                  SongFormView(
+                    title: "Edit song",
                     item: songList[index],
-                    onEdit: () {
-                      SongFormView(
-                        title: "Edit song",
-                        item: songList[index],
-                        producerList: producerList,
-                        onDone: (song) => _updateSong(song),
-                      ).showAsDialog(context);
-                    },
-                  ),
+                    producerList: producerList,
+                    onDone: (song) => _updateSong(song),
+                  ).showAsDialog(context);
+                },
+              ),
             ),
           ),
         ],

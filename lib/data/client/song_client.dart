@@ -5,6 +5,20 @@ import 'package:mmd2/data/model/producer_model.dart';
 import 'package:mmd2/data/model/song_model.dart';
 
 class SongClient extends BaseClient {
+  Future<BaseModel<ProducerModel>?> createProducer(ProducerModel body) async {
+    try {
+      final response = await dio.post("/producer", data: body.toJson());
+
+      return BaseModel.fromJson(
+        response.data,
+            (baseMap) => ProducerModel.fromJson(baseMap),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
+
   Future<BaseModel<PagingModel<ProducerModel>>?> getPagingProducer() async {
     try {
       final response = await dio.post("/producer/paging", data: {
@@ -18,6 +32,20 @@ class SongClient extends BaseClient {
           baseMap,
           (itemMap) => ProducerModel.fromJson(itemMap),
         ),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
+
+  Future<BaseModel<ProducerModel>?> updateProducer(ProducerModel body) async {
+    try {
+      final response = await dio.put("/producer", data: body.toJson());
+
+      return BaseModel.fromJson(
+        response.data,
+            (baseMap) => ProducerModel.fromJson(baseMap),
       );
     } on Exception catch (ex) {
       debugPrint(ex.toString());
