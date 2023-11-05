@@ -38,7 +38,7 @@ class _WorldFormViewState extends State<WorldFormView> {
               textInputAction: TextInputAction.next,
               maxLength: 255,
               decoration: const InputDecoration(
-                hintText: "Name",
+                labelText: "Name",
               ),
             ),
             TextField(
@@ -46,9 +46,9 @@ class _WorldFormViewState extends State<WorldFormView> {
               textInputAction: TextInputAction.done,
               minLines: 1,
               maxLines: 5,
-              maxLength: 1023,
+              maxLength: 1024,
               decoration: const InputDecoration(
-                hintText: "Description",
+                labelText: "Description",
               ),
               onSubmitted: (_) {
                 widget.onDone?.call(_buildWorld);

@@ -45,16 +45,17 @@ class _CharacterFormViewState extends State<CharacterFormView> {
               textInputAction: TextInputAction.next,
               maxLength: 255,
               decoration: const InputDecoration(
-                hintText: "Name",
+                labelText: "Name",
               ),
             ),
             TextField(
               controller: urlCtrl,
-              autofocus: true,
               textInputAction: TextInputAction.next,
-              maxLength: 255,
+              minLines: 1,
+              maxLines: 5,
+              maxLength: 1024,
               decoration: const InputDecoration(
-                hintText: "Url",
+                labelText: "Url",
               ),
             ),
             TextField(
@@ -64,7 +65,7 @@ class _CharacterFormViewState extends State<CharacterFormView> {
               maxLines: 5,
               maxLength: 1024,
               decoration: const InputDecoration(
-                hintText: "Description",
+                labelText: "Description",
               ),
               onSubmitted: (_) {
                 widget.onDone?.call(_buildCharacter);

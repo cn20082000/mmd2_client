@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mmd2/data/client/character_client.dart';
 import 'package:mmd2/data/model/character_model.dart';
@@ -127,10 +128,10 @@ class _WorldItemViewState extends State<WorldItemView> {
               child: SizedBox(
                 height: 64,
                 width: 64,
-                child: Image.network(
-                  e.url ?? "",
+                child: CachedNetworkImage(
+                  imageUrl: e.url ?? "",
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Placeholder(),
+                  errorWidget: (_, __, ___) => const Placeholder(),
                 ),
               ),
             ),

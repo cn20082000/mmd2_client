@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mmd2/data/model/character_model.dart';
 import 'package:mmd2/util/extension/text_style_extension.dart';
@@ -23,10 +24,10 @@ class CharacterItemView extends StatelessWidget {
             child: SizedBox(
               height: 64,
               width: 64,
-              child: Image.network(
-                item.url ?? "",
+              child: CachedNetworkImage(
+                imageUrl: item.url ?? "",
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Placeholder(),
+                errorWidget: (_, __, ___) => const Placeholder(),
               ),
             ),
           ),
