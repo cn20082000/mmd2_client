@@ -4,8 +4,9 @@ class BasicItem extends StatelessWidget {
   final void Function()? onPressed;
   final Widget? child;
   final EdgeInsetsGeometry? padding;
+  final BoxConstraints constraints;
 
-  const BasicItem({super.key, this.onPressed, this.child, this.padding});
+  const BasicItem({super.key, this.onPressed, this.child, this.padding, this.constraints = const BoxConstraints()});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +17,12 @@ class BasicItem extends StatelessWidget {
         onTap: onPressed,
         hoverColor: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: padding ?? EdgeInsets.zero,
-          child: child,
+        child: ConstrainedBox(
+          constraints: constraints,
+          child: Padding(
+            padding: padding ?? EdgeInsets.zero,
+            child: child,
+          ),
         ),
       ),
     );

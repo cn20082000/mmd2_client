@@ -144,7 +144,7 @@ class _AuthorFormViewState extends State<AuthorFormView> {
         ),
         FilledButton(
           onPressed: () {
-            // widget.onDone?.call(_buildAction);
+            widget.onDone?.call(_buildAuthor);
             Navigator.pop(context);
           },
           child: const Text("Done"),
