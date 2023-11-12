@@ -65,4 +65,18 @@ class AuthorClient extends BaseClient {
     }
     return null;
   }
+
+  Future<BaseModel<AuthorModel>?> syncVideo(AuthorModel body) async {
+    try {
+      final response = await dio.post("/author/sync", data: body.toJson());
+
+      return BaseModel.fromJson(
+        response.data,
+        (baseMap) => AuthorModel.fromJson(baseMap),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
 }

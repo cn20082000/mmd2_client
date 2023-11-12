@@ -4,6 +4,7 @@ import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/navigation/section_navigator.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
+import 'package:mmd2/view/section_author/author_video/author_video_view.dart';
 import 'package:mmd2/view/section_author/widgets/author_form_view.dart';
 import 'package:mmd2/view/section_author/widgets/author_item_view.dart';
 
@@ -88,6 +89,9 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
                         onPreview: _previewAuthor,
                         onDone: (author) => _updateAuthor(author),
                       ).showAsDialog(context);
+                    },
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => AuthorVideoView(author: authorList[index])));
                     },
                   ),
                 ),

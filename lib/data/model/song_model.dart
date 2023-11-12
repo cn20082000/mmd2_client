@@ -11,11 +11,12 @@ class SongModel extends IToJson {
   SongModel({this.id, this.name, this.url, this.description, this.producers});
 
   factory SongModel.fromJson(Map<String, dynamic> json) => SongModel(
-      id: json["id"] as String?,
-      name: json["name"] as String?,
-      url: json["url"] as String?,
-      description: json["description"] as String?,
-      producers: (json["producers"] as List?)?.map((e) => ProducerModel.fromJson(e as Map<String, dynamic>)).toList());
+        id: json["id"] as String?,
+        name: json["name"] as String?,
+        url: json["url"] as String?,
+        description: json["description"] as String?,
+        producers: (json["producers"] as List?)?.map((e) => ProducerModel.fromJson(e as Map<String, dynamic>)).toList(),
+      );
 
   @override
   Map<String, dynamic> toJson({bool includeNullValue = false}) => {

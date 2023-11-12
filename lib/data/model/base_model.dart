@@ -61,7 +61,7 @@ class PagingModel<T extends IToJson> extends IToJson {
 
   @override
   Map<String, dynamic> toJson({bool includeNullValue = false}) => {
-        "data": data?.map((e) => e.toJson(includeNullValue: includeNullValue)),
+        "data": data?.map((e) => e.toJson(includeNullValue: includeNullValue)).toList(),
         "pageIndex": pageIndex,
         "pageSize": pageSize,
         "elements": elements,

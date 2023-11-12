@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mmd2/common/app.dart';
-import 'package:mmd2/data/client/system_client.dart';
 import 'package:mmd2/view/custom/navigation/navigation_button.dart';
 import 'package:mmd2/view/section_action/section_action_view.dart';
 import 'package:mmd2/view/section_author/section_author_view.dart';
@@ -16,15 +14,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final systemClient = SystemClient();
-
   int index = 0;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _getSystem();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,14 +81,5 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
     );
-  }
-
-  Future<void> _getSystem() async {
-    final response = await systemClient.getSystem();
-
-    if (response?.data != null) {
-      App.additionHeader.clear();
-      App.additionHeader.addAll(response?.data?.additionHeaders ?? {});
-    }
   }
 }

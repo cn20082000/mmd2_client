@@ -8,15 +8,16 @@ import 'package:url_launcher/url_launcher.dart';
 class AuthorItemView extends StatelessWidget {
   final AuthorModel item;
   final void Function()? onEdit;
+  final void Function()? onPressed;
 
-  const AuthorItemView({super.key, required this.item, this.onEdit});
+  const AuthorItemView({super.key, required this.item, this.onEdit, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return BasicItem(
       padding: const EdgeInsets.all(16),
       constraints: const BoxConstraints(maxWidth: 240),
-      onPressed: () {},
+      onPressed: onPressed,
       child: Column(
         children: [
           ClipRRect(

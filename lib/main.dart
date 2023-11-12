@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mmd2/common/app.dart';
+import 'package:mmd2/data/client/system_client.dart';
 import 'package:mmd2/view/home_view.dart';
 
-void main() {
+void main() async {
+  await _getSystem();
+
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     title: 'Flutter Demo',
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -10,4 +15,15 @@ void main() {
     ),
     home: const HomeView(),
   ));
+}
+
+Future<void> _getSystem() async {
+  final systemClient = SystemClient();
+
+  final response = await systemClient.getSystem();
+
+  if (response?.data != null) {
+    App.additionHeader.clear();
+    App.additionHeader.addAll(response?.data?.additionHeaders ?? {});
+  }
 }
