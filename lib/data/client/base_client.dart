@@ -33,6 +33,10 @@ class BaseClient {
       onResponse: (response, handler) {
         debugPrint(jsonEncode(response.data));
         return handler.next(response);
+      },
+      onError: (error, handler) {
+        debugPrint(jsonEncode(error.response?.data));
+        return handler.next(error);
       }
     ));
   }

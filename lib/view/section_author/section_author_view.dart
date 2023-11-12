@@ -81,7 +81,14 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
                   authorList.length,
                   (index) => AuthorItemView(
                     item: authorList[index],
-                    onEdit: () {},
+                    onEdit: () {
+                      AuthorFormView(
+                        title: "Update author",
+                        item: authorList[index],
+                        onPreview: _previewAuthor,
+                        onDone: (author) => _updateAuthor(author),
+                      ).showAsDialog(context);
+                    },
                   ),
                 ),
               ),
@@ -114,6 +121,14 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
 
   Future<void> _createAuthor(AuthorModel author) async {
     final response = await authorClient.createAuthor(author);
+
+    if (response?.data != null) {
+      _reloadData();
+    }
+  }
+
+  Future<void> _updateAuthor(AuthorModel author) async {
+    final response = await authorClient.updateAuthor(author);
 
     if (response?.data != null) {
       _reloadData();

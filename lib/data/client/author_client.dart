@@ -38,6 +38,20 @@ class AuthorClient extends BaseClient {
     return null;
   }
 
+  Future<BaseModel<AuthorModel>?> updateAuthor(AuthorModel body) async {
+    try {
+      final response = await dio.put("/author", data: body.toJson());
+
+      return BaseModel.fromJson(
+        response.data,
+        (baseMap) => AuthorModel.fromJson(baseMap),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
+
   Future<BaseModel<AuthorModel>?> previewAuthor(AuthorModel body) async {
     try {
       final response = await dio.post("/author/preview", data: body.toJson());

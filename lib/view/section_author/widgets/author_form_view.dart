@@ -30,6 +30,12 @@ class _AuthorFormViewState extends State<AuthorFormView> {
   void initState() {
     super.initState();
     item = widget.item;
+    profileRelativeUrlCtrl.text = item?.profileRelativeUrl ?? "";
+    nameCtrl.text = item?.name ?? "";
+    profileUrlCtrl.text = item?.profileUrl ?? "";
+    avatarUrlCtrl.text = item?.avatarUrl ?? "";
+    descriptionCtrl.text = item?.description ?? "";
+    statusCtrl.text = item?.isAlive == true ? "Alive" : "Dead";
   }
 
   @override
@@ -154,6 +160,7 @@ class _AuthorFormViewState extends State<AuthorFormView> {
   }
 
   AuthorModel get _buildAuthor => AuthorModel(
+        id: item?.id,
         profileRelativeUrl: profileRelativeUrlCtrl.text.trim(),
       );
 
