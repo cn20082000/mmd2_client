@@ -5,11 +5,11 @@ import 'package:mmd2/data/model/video_model.dart';
 import 'package:mmd2/data/model/video_query_model.dart';
 
 class VideoClient extends BaseClient {
-  Future<BaseModel<PagingModel<VideoModel>>?> queryVideo(VideoQueryModel body) async {
+  Future<BaseModel<PagingModel<VideoModel>>?> queryVideo(int pageIndex, int pageSize, VideoQueryModel body) async {
     try {
       final response = await dio.post("/video/query", data: {
-        "pageIndex": 0,
-        "pageSize": 9999,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
         "data": body.toJson(),
       });
 

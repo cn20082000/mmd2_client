@@ -69,7 +69,7 @@ class _HomeViewState extends State<HomeView> {
           Expanded(
             child: IndexedStack(
               index: index,
-              children: const [
+              children: [
                 VideoView(),
                 SectionAuthorView(),
                 SectionSongView(),

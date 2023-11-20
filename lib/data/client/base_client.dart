@@ -30,7 +30,8 @@ class BaseClient {
         option.headers.addAll(App.additionHeader);
         return handler.next(option);
       },
-      onResponse: (response, handler) {
+      onResponse: (response, handler) async {
+        await Future.delayed(const Duration(seconds: 2));
         debugPrint(jsonEncode(response.data));
         return handler.next(response);
       },

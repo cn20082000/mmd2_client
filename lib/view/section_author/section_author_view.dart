@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mmd2/data/client/author_client.dart';
 import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
+import 'package:mmd2/view/custom/loading/view/loading_view.dart';
 import 'package:mmd2/view/custom/navigation/section_navigator.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
 import 'package:mmd2/view/section_author/author_video/author_video_view.dart';
@@ -18,13 +21,15 @@ class SectionAuthorView extends StatefulWidget {
 class _SectionAuthorViewState extends State<SectionAuthorView> {
   final authorClient = AuthorClient();
 
-  bool isLoading = false;
-  final authorList = <AuthorModel>[];
+  final loadingCtrl = LoadingListController(20);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _reloadData();
+    loadingCtrl.getData = _getData;
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    loadingCtrl.reload();
+    // });
   }
 
   @override
@@ -44,10 +49,13 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
             ),
             const Spacer(),
             const SizedBox(width: 16),
-            IconButton(
-              tooltip: "Refresh",
-              onPressed: isLoading ? null : _reloadData,
-              icon: const Icon(Icons.refresh),
+            LoadingView(
+              controller: loadingCtrl,
+              builder: (loading) => IconButton(
+                tooltip: "Refresh",
+                onPressed: loading ? null : loadingCtrl.reload,
+                icon: const Icon(Icons.refresh),
+              ),
             ),
           ],
         ),
@@ -63,58 +71,35 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
         tooltip: "Add new author",
         child: const Icon(Icons.add),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (isLoading) const LinearProgressIndicator(minHeight: 4),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                top: 16,
-                left: 16,
-                right: 16,
-                bottom: 64,
-              ),
-              child: Wrap(
-                spacing: 16,
-                runSpacing: 16,
-                children: List.generate(
-                  authorList.length,
-                  (index) => AuthorItemView(
-                    item: authorList[index],
-                    onEdit: () {
-                      AuthorFormView(
-                        title: "Update author",
-                        item: authorList[index],
-                        onPreview: _previewAuthor,
-                        onDone: (author) => _updateAuthor(author),
-                      ).showAsDialog(context);
-                    },
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => AuthorVideoView(author: authorList[index])));
-                    },
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
+      body: LoadingListView.wrap(
+        controller: loadingCtrl,
+        itemBuilder: (_, __, item) => AuthorItemView(
+          item: item,
+          onEdit: () {
+            AuthorFormView(
+              title: "Update author",
+              item: item,
+              onPreview: _previewAuthor,
+              onDone: (author) => _updateAuthor(author),
+            ).showAsDialog(context);
+          },
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => AuthorVideoView(author: item)));
+          },
+        ),
       ),
     );
   }
 
-  Future<void> _reloadData() async {
-    setState(() {
-      isLoading = true;
-    });
-    final response = await authorClient.getPagingAuthor();
+  Future<List<AuthorModel>> _getData(int pageIndex, int pageSize) async {
+    final result = <AuthorModel>[];
+
+    final response = await authorClient.getPagingAuthor(pageIndex, pageSize);
     if (response?.data != null) {
-      authorList.clear();
-      authorList.addAll(response?.data?.data ?? []);
+      result.addAll(response?.data?.data ?? []);
     }
-    setState(() {
-      isLoading = false;
-    });
+
+    return result;
   }
 
   Future<AuthorModel?> _previewAuthor(AuthorModel author) async {
@@ -127,7 +112,7 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
     final response = await authorClient.createAuthor(author);
 
     if (response?.data != null) {
-      _reloadData();
+      loadingCtrl.reload();
     }
   }
 
@@ -135,7 +120,7 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
     final response = await authorClient.updateAuthor(author);
 
     if (response?.data != null) {
-      _reloadData();
+      loadingCtrl.reload();
     }
   }
 }

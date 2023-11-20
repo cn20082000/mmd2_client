@@ -18,11 +18,11 @@ class AuthorClient extends BaseClient {
     return null;
   }
 
-  Future<BaseModel<PagingModel<AuthorModel>>?> getPagingAuthor() async {
+  Future<BaseModel<PagingModel<AuthorModel>>?> getPagingAuthor(int pageIndex, int pageSize) async {
     try {
       final response = await dio.post("/author/paging", data: {
-        "pageIndex": 0,
-        "pageSize": 9999,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
       });
 
       return BaseModel.fromJson(

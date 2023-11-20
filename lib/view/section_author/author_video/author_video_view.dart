@@ -4,6 +4,9 @@ import 'package:mmd2/data/client/video_client.dart';
 import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/data/model/video_model.dart';
 import 'package:mmd2/data/model/video_query_model.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
+import 'package:mmd2/view/custom/loading/view/loading_view.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
 import 'package:mmd2/view/section_video/widgets/video_item_view.dart';
 
@@ -20,13 +23,15 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
   final videoClient = VideoClient();
   final authorClient = AuthorClient();
 
-  bool isLoading = false;
-  final videoList = <VideoModel>[];
+  final loadingCtrl = LoadingListController(20);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _reloadData();
+    loadingCtrl.getData = _getData;
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    loadingCtrl.reload();
+    // });
   }
 
   @override
@@ -47,80 +52,63 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
             ),
             const Spacer(),
             const SizedBox(width: 16),
-            IconButton(
-              tooltip: "Refresh",
-              onPressed: isLoading ? null : () => _reloadData(),
-              icon: const Icon(Icons.refresh),
+            LoadingView(
+              controller: loadingCtrl,
+              builder: (loading) => IconButton(
+                tooltip: "Refresh",
+                onPressed: loading ? null : loadingCtrl.reload,
+                icon: const Icon(Icons.refresh),
+              ),
             ),
           ],
         ),
       ),
-      floatingButton: FloatingActionButton(
-        onPressed: () => _syncVideo(),
-        tooltip: "Sync videos",
-        child: const Icon(Icons.download),
+      floatingButton: LoadingView(
+        controller: loadingCtrl,
+        builder: (loading) => FloatingActionButton(
+          onPressed: loading ? null : _syncVideo,
+          tooltip: "Sync videos",
+          child: const Icon(Icons.download),
+        ),
       ),
-      body: Column(
-        children: [
-          if (isLoading) const LinearProgressIndicator(minHeight: 4),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.only(
-                top: 16,
-                left: 16,
-                right: 16,
-                bottom: 64,
-              ),
-              itemCount: videoList.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              itemBuilder: (_, index) => VideoItemView(
-                item: videoList[index],
-                onEdit: () {
-                  // CharacterFormView(
-                  //   title: "Edit character",
-                  //   item: characterList[index],
-                  //   worldList: worldList,
-                  //   onDone: (character) => _updateCharacter(character),
-                  // ).showAsDialog(context);
-                },
-              ),
-            ),
-          ),
-        ],
+      body: LoadingListView.separated(
+        controller: loadingCtrl,
+        itemBuilder: (_, __, item) => VideoItemView(
+          item: item,
+          onEdit: () {
+            // CharacterFormView(
+            //   title: "Edit character",
+            //   item: characterList[index],
+            //   worldList: worldList,
+            //   onDone: (character) => _updateCharacter(character),
+            // ).showAsDialog(context);
+          },
+        ),
       ),
     );
   }
 
-  Future<void> _reloadData() async {
-    setState(() {
-      isLoading = true;
-    });
+  Future<List<VideoModel>> _getData(int pageIndex, int pageSize) async {
+    final result = <VideoModel>[];
+
     final response = await Future.wait([
-      videoClient.queryVideo(VideoQueryModel(authors: [widget.author])),
+      videoClient.queryVideo(pageIndex, pageSize, VideoQueryModel(authors: [widget.author])),
     ]);
 
     if (response[0]?.data != null) {
-      videoList.clear();
-      videoList.addAll((response[0]?.data?.data ?? []));
+      result.addAll((response[0]?.data?.data ?? []));
     }
 
-    setState(() {
-      isLoading = false;
-    });
+    return result;
   }
 
   Future<void> _syncVideo() async {
-    setState(() {
-      isLoading = true;
-    });
+    loadingCtrl.loading = true;
     final response = await authorClient.syncVideo(widget.author);
-
-    setState(() {
-      isLoading = false;
-    });
+    loadingCtrl.loading = false;
 
     if (response?.data != null) {
-      _reloadData();
+      loadingCtrl.reload();
     }
   }
 }
