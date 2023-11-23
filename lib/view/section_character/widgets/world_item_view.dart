@@ -62,7 +62,6 @@ class _WorldItemViewState extends State<WorldItemView> {
                       item: CharacterModel(
                         world: widget.item,
                       ),
-                      worldList: widget.worldList,
                       onDone: (c) => _createCharacter(c),
                     ).showAsDialog(context);
                   },
@@ -150,7 +149,6 @@ class _WorldItemViewState extends State<WorldItemView> {
                     CharacterFormView(
                       title: "Edit character",
                       item: e,
-                      worldList: widget.worldList,
                       onDone: (c) => _updateCharacter(c),
                     ).showAsDialog(context);
                   },

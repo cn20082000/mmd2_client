@@ -15,54 +15,49 @@ class CharacterItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BasicItem(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.all(16),
+      constraints: const BoxConstraints(maxWidth: 240),
       onPressed: () {},
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: SizedBox(
-              height: 64,
-              width: 64,
-              child: CachedNetworkImage(
-                imageUrl: item.url.nullOrEmpty(Constants.defaultImage),
-                fit: BoxFit.cover,
-                errorWidget: (_, __, ___) => const Placeholder(),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: item.name ?? "",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      TextSpan(
-                        text: " (${item.world?.name ?? ""})",
-                        style: Theme.of(context).textTheme.bodyMedium?.bold,
-                      ),
-                    ],
+          Stack(
+            alignment: Alignment.topRight,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: CachedNetworkImage(
+                    imageUrl: item.url.nullOrEmpty(Constants.defaultImage),
+                    fit: BoxFit.cover,
+                    errorWidget: (_, __, ___) => const Placeholder(),
                   ),
                 ),
-                Text(
-                  item.description ?? "",
-                  style: Theme.of(context).textTheme.bodyMedium?.grey,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton.filledTonal(
+                      onPressed: onEdit,
+                      icon: const Icon(Icons.edit),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          IconButton(
-            onPressed: onEdit,
-            icon: const Icon(Icons.edit),
+          const SizedBox(height: 16),
+          Text(
+            item.name ?? "",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            "World: ${item.world?.name ?? ""}",
+            style: Theme.of(context).textTheme.bodyMedium?.grey,
           ),
         ],
       ),

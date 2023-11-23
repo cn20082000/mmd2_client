@@ -29,9 +29,7 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     loadingCtrl.getData = _getData;
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     loadingCtrl.reload();
-    // });
   }
 
   @override
@@ -91,12 +89,10 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
   Future<List<VideoModel>> _getData(int pageIndex, int pageSize) async {
     final result = <VideoModel>[];
 
-    final response = await Future.wait([
-      videoClient.queryVideo(pageIndex, pageSize, VideoQueryModel(authors: [widget.author])),
-    ]);
+    final response = await videoClient.queryVideo(pageIndex, pageSize, VideoQueryModel(authors: [widget.author]));
 
-    if (response[0]?.data != null) {
-      result.addAll((response[0]?.data?.data ?? []));
+    if (response?.data != null) {
+      result.addAll((response?.data?.data ?? []));
     }
 
     return result;

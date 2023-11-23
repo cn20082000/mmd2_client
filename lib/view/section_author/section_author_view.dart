@@ -27,9 +27,7 @@ class _SectionAuthorViewState extends State<SectionAuthorView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     loadingCtrl.getData = _getData;
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     loadingCtrl.reload();
-    // });
   }
 
   @override

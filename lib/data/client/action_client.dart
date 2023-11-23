@@ -18,11 +18,11 @@ class ActionClient extends BaseClient {
     return null;
   }
 
-  Future<BaseModel<PagingModel<ActionModel>>?> getPagingAction() async {
+  Future<BaseModel<PagingModel<ActionModel>>?> getPagingAction(int pageIndex, int pageSize) async {
     try {
       final response = await dio.post("/action/paging", data: {
-        "pageIndex": 0,
-        "pageSize": 9999,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
       });
 
       return BaseModel.fromJson(

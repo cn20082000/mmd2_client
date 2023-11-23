@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:mmd2/data/client/character_client.dart';
 import 'package:mmd2/data/model/character_model.dart';
 import 'package:mmd2/data/model/world_model.dart';
 
 class CharacterFormView extends StatefulWidget {
   final String title;
   final CharacterModel? item;
-  final List<WorldModel> worldList;
   final void Function(CharacterModel)? onDone;
 
-  const CharacterFormView({super.key, required this.title, this.item, required this.worldList, this.onDone});
+  const CharacterFormView({super.key, required this.title, this.item, this.onDone});
 
   @override
   State<CharacterFormView> createState() => _CharacterFormViewState();
 }
 
 class _CharacterFormViewState extends State<CharacterFormView> {
+  final characterClient = CharacterClient();
+
   final nameCtrl = TextEditingController();
   final urlCtrl = TextEditingController();
   final descriptionCtrl = TextEditingController();
+
+  final worldList = <WorldModel>[];
   WorldModel? selectedWorld;
 
   @override
@@ -27,6 +31,12 @@ class _CharacterFormViewState extends State<CharacterFormView> {
     urlCtrl.text = widget.item?.url ?? "";
     descriptionCtrl.text = widget.item?.description ?? "";
     selectedWorld = widget.item?.world;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getAllWorldLite();
   }
 
   @override
@@ -73,20 +83,22 @@ class _CharacterFormViewState extends State<CharacterFormView> {
               },
             ),
             PopupMenuButton(
-              itemBuilder: (_) => widget.worldList.map((e) => PopupMenuItem<WorldModel>(
-                value: e,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: e.id == selectedWorld?.id ? const Icon(Icons.check, size: 16) : null,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(e.name ?? ""),
-                  ],
-                ),
-              )).toList(),
+              itemBuilder: (_) => worldList
+                  .map((e) => PopupMenuItem<WorldModel>(
+                        value: e,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: e.id == selectedWorld?.id ? const Icon(Icons.check, size: 16) : null,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(e.name ?? ""),
+                          ],
+                        ),
+                      ))
+                  .toList(),
               initialValue: selectedWorld,
               onSelected: (result) {
                 setState(() {
@@ -123,10 +135,18 @@ class _CharacterFormViewState extends State<CharacterFormView> {
   }
 
   CharacterModel get _buildCharacter => CharacterModel(
-    id: widget.item?.id,
-    name: nameCtrl.text.trim(),
-    url: urlCtrl.text.trim(),
-    description: descriptionCtrl.text.trim(),
-    world: selectedWorld,
-  );
+        id: widget.item?.id,
+        name: nameCtrl.text.trim(),
+        url: urlCtrl.text.trim(),
+        description: descriptionCtrl.text.trim(),
+        world: selectedWorld,
+      );
+
+  Future<void> _getAllWorldLite() async {
+    final response = await characterClient.getAllWorldLite();
+    if (response?.data != null) {
+      worldList.clear();
+      worldList.addAll(response?.data?.data ?? []);
+    }
+  }
 }
