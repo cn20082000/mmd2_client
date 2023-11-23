@@ -19,11 +19,11 @@ class CharacterClient extends BaseClient {
     return null;
   }
 
-  Future<BaseModel<PagingModel<WorldModel>>?> getPagingWorld() async {
+  Future<BaseModel<PagingModel<WorldModel>>?> getPagingWorld(int pageIndex, int pageSize) async {
     try {
       final response = await dio.post("/world/paging", data: {
-        "pageIndex": 0,
-        "pageSize": 9999,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
       });
 
       return BaseModel.fromJson(

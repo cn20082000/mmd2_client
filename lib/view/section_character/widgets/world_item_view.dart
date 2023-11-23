@@ -12,11 +12,10 @@ import 'package:mmd2/view/section_character/widgets/character_form_view.dart';
 
 class WorldItemView extends StatefulWidget {
   final WorldModel item;
-  final List<WorldModel> worldList;
   final void Function()? onEdit;
   final Future<List<CharacterModel>> Function()? onGetCharacters;
 
-  const WorldItemView({super.key, required this.item, this.onEdit, this.onGetCharacters, required this.worldList});
+  const WorldItemView({super.key, required this.item, this.onEdit, this.onGetCharacters});
 
   @override
   State<WorldItemView> createState() => _WorldItemViewState();

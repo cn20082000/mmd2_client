@@ -3,6 +3,9 @@ import 'package:mmd2/data/client/character_client.dart';
 import 'package:mmd2/data/model/character_model.dart';
 import 'package:mmd2/data/model/world_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
+import 'package:mmd2/view/custom/loading/view/loading_view.dart';
 import 'package:mmd2/view/custom/navigation/section_navigator.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
 import 'package:mmd2/view/section_character/all_character/all_character_view.dart';
@@ -19,13 +22,13 @@ class SectionCharacterView extends StatefulWidget {
 class _SectionCharacterViewState extends State<SectionCharacterView> {
   final characterClient = CharacterClient();
 
-  bool isLoading = false;
-  final worldList = <WorldModel>[];
+  final loadingCtrl = LoadingListController(20);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _reloadData();
+    loadingCtrl.getData = _getData;
+    loadingCtrl.reload();
   }
 
   @override
@@ -57,10 +60,13 @@ class _SectionCharacterViewState extends State<SectionCharacterView> {
             ),
             const Spacer(),
             const SizedBox(width: 16),
-            IconButton(
-              tooltip: "Refresh",
-              onPressed: isLoading ? null : () => _reloadData(),
-              icon: const Icon(Icons.refresh),
+            LoadingView(
+              controller: loadingCtrl,
+              builder: (loading) => IconButton(
+                tooltip: "Refresh",
+                onPressed: loading ? null : loadingCtrl.reload,
+                icon: const Icon(Icons.refresh),
+              ),
             ),
           ],
         ),
@@ -75,61 +81,43 @@ class _SectionCharacterViewState extends State<SectionCharacterView> {
         tooltip: "Add new world",
         child: const Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          if (isLoading) const LinearProgressIndicator(minHeight: 4),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.only(
-                top: 16,
-                left: 16,
-                right: 16,
-                bottom: 64,
-              ),
-              itemCount: worldList.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              itemBuilder: (_, index) =>
-                  WorldItemView(
-                    item: worldList[index],
-                    worldList: worldList,
-                    onEdit: () {
-                      WorldFormView(
-                        title: "Edit world",
-                        item: worldList[index],
-                        onDone: (world) => _updateWorld(world),
-                      ).showAsDialog(context);
-                    },
-                    onGetCharacters: () => _getCharacterDataByWorld(worldList[index]),
-                  ),
-            ),
-          ),
-        ],
+      body: LoadingListView.separated(
+        controller: loadingCtrl,
+        itemBuilder: (_, __, item) => WorldItemView(
+          item: item,
+          onEdit: () {
+            WorldFormView(
+              title: "Edit world",
+              item: item,
+              onDone: (world) => _updateWorld(world),
+            ).showAsDialog(context);
+          },
+          onGetCharacters: () => _getCharacterDataByWorld(item),
+        ),
       ),
     );
   }
 
-  Future<void> _reloadData() async {
-    setState(() {
-      isLoading = true;
-    });
-    final response = await characterClient.getPagingWorld();
+  Future<List<WorldModel>> _getData(int pageIndex, int pageSize) async {
+    final result = <WorldModel>[];
+
+    final response = await characterClient.getPagingWorld(pageIndex, pageSize);
     if (response?.data != null) {
-      worldList.clear();
-      worldList.addAll(response?.data?.data ?? []);
+      result.clear();
+      result.addAll(response?.data?.data ?? []);
     }
-    setState(() {
-      isLoading = false;
-    });
+
+    return result;
   }
 
   Future<List<CharacterModel>> _getCharacterDataByWorld(WorldModel world) async {
-    setState(() {
-      isLoading = true;
-    });
+    // setState(() {
+    //   isLoading = true;
+    // });
     final response = await characterClient.getPagingCharacterByWorld(world);
-    setState(() {
-      isLoading = false;
-    });
+    // setState(() {
+    //   isLoading = false;
+    // });
     if (response?.data != null) {
       return response?.data?.data ?? [];
     }
@@ -140,7 +128,7 @@ class _SectionCharacterViewState extends State<SectionCharacterView> {
     final response = await characterClient.createWorld(world);
 
     if (response?.data != null) {
-      _reloadData();
+      loadingCtrl.reload();
     }
   }
 
@@ -148,7 +136,7 @@ class _SectionCharacterViewState extends State<SectionCharacterView> {
     final response = await characterClient.updateWorld(world);
 
     if (response?.data != null) {
-      _reloadData();
+      loadingCtrl.reload();
     }
   }
 }
