@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mmd2/data/client/song_client.dart';
-import 'package:mmd2/data/model/producer_model.dart';
 import 'package:mmd2/data/model/song_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
+import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
+import 'package:mmd2/view/custom/loading/view/loading_view.dart';
 import 'package:mmd2/view/custom/navigation/section_navigator.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
 import 'package:mmd2/view/section_song/all_producer/all_producer_view.dart';
@@ -19,14 +21,13 @@ class SectionSongView extends StatefulWidget {
 class _SectionSongViewState extends State<SectionSongView> {
   final songClient = SongClient();
 
-  bool isLoading = false;
-  final songList = <SongModel>[];
-  final producerList = <ProducerModel>[];
+  final loadingCtrl = LoadingListController(20);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _reloadData();
+    loadingCtrl.getData = _getData;
+    loadingCtrl.reload();
   }
 
   @override
@@ -55,10 +56,13 @@ class _SectionSongViewState extends State<SectionSongView> {
             ),
             const Spacer(),
             const SizedBox(width: 16),
-            IconButton(
-              tooltip: "Refresh",
-              onPressed: isLoading ? null : () => _reloadData(),
-              icon: const Icon(Icons.refresh),
+            LoadingView(
+              controller: loadingCtrl,
+              builder: (loading) => IconButton(
+                tooltip: "Refresh",
+                onPressed: loading ? null : loadingCtrl.reload,
+                icon: const Icon(Icons.refresh),
+              ),
             ),
           ],
         ),
@@ -67,72 +71,44 @@ class _SectionSongViewState extends State<SectionSongView> {
         onPressed: () {
           SongFormView(
             title: "Add new song",
-            producerList: producerList,
             onDone: (song) => _createSong(song),
           ).showAsDialog(context);
         },
         tooltip: "Add new song",
         child: const Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          if (isLoading) const LinearProgressIndicator(minHeight: 4),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.only(
-                top: 16,
-                left: 16,
-                right: 16,
-                bottom: 64,
-              ),
-              itemCount: songList.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 4),
-              itemBuilder: (_, index) => SongItemView(
-                item: songList[index],
-                onEdit: () {
-                  SongFormView(
-                    title: "Edit song",
-                    item: songList[index],
-                    producerList: producerList,
-                    onDone: (song) => _updateSong(song),
-                  ).showAsDialog(context);
-                },
-              ),
-            ),
-          ),
-        ],
+      body: LoadingListView.separated(
+        controller: loadingCtrl,
+        itemBuilder: (_, __, item) => SongItemView(
+          item: item,
+          onEdit: () {
+            SongFormView(
+              title: "Edit song",
+              item: item,
+              onDone: (song) => _updateSong(song),
+            ).showAsDialog(context);
+          },
+        ),
       ),
     );
   }
 
-  Future<void> _reloadData() async {
-    setState(() {
-      isLoading = true;
-    });
-    final response = await Future.wait([
-      songClient.getPagingSong(),
-      songClient.getPagingProducer(),
-    ]);
+  Future<List<SongModel>> _getData(int pageIndex, int pageSize) async {
+    final result = <SongModel>[];
 
-    if (response[0]?.data != null) {
-      songList.clear();
-      songList.addAll((response[0]?.data?.data ?? []) as Iterable<SongModel>);
-    }
-    if (response[1]?.data != null) {
-      producerList.clear();
-      producerList.addAll((response[1]?.data?.data ?? []) as Iterable<ProducerModel>);
+    final response = await songClient.getPagingSong(pageIndex, pageSize);
+    if (response?.data != null) {
+      result.addAll(response?.data?.data ?? []);
     }
 
-    setState(() {
-      isLoading = false;
-    });
+    return result;
   }
 
   Future<void> _createSong(SongModel song) async {
     final response = await songClient.createSong(song);
 
     if (response?.data != null) {
-      _reloadData();
+      loadingCtrl.reload();
     }
   }
 
@@ -140,7 +116,7 @@ class _SectionSongViewState extends State<SectionSongView> {
     final response = await songClient.updateSong(song);
 
     if (response?.data != null) {
-      _reloadData();
+      loadingCtrl.reload();
     }
   }
 }

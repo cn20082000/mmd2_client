@@ -49,23 +49,10 @@ class SongItemView extends StatelessWidget {
                   item.description ?? "",
                   style: Theme.of(context).textTheme.bodyMedium?.grey,
                 ),
-                Wrap(
-                  children: (item.producers ?? [])
-                      .map((e) => Container(
-                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                            margin: const EdgeInsets.only(top: 4, right: 8),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black12),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              e.name ?? "",
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ))
-                      .toList(),
-                )
+                Text(
+                  "Producer: ${(item.producers ?? []).map((e) => e.name ?? "").join(", ")}",
+                  style: Theme.of(context).textTheme.bodyMedium?.grey,
+                ),
               ],
             ),
           ),

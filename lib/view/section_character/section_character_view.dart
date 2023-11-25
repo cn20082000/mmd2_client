@@ -92,36 +92,21 @@ class _SectionCharacterViewState extends State<SectionCharacterView> {
               onDone: (world) => _updateWorld(world),
             ).showAsDialog(context);
           },
-          onGetCharacters: () => _getCharacterDataByWorld(item),
         ),
       ),
     );
   }
 
-  Future<List<WorldModel>> _getData(int pageIndex, int pageSize) async {
-    final result = <WorldModel>[];
+  Future<List<WorldItemModel>> _getData(int pageIndex, int pageSize) async {
+    final result = <WorldItemModel>[];
 
     final response = await characterClient.getPagingWorld(pageIndex, pageSize);
     if (response?.data != null) {
       result.clear();
-      result.addAll(response?.data?.data ?? []);
+      result.addAll((response?.data?.data ?? []).map((e) => WorldItemModel(e)));
     }
 
     return result;
-  }
-
-  Future<List<CharacterModel>> _getCharacterDataByWorld(WorldModel world) async {
-    // setState(() {
-    //   isLoading = true;
-    // });
-    final response = await characterClient.getPagingCharacterByWorld(world);
-    // setState(() {
-    //   isLoading = false;
-    // });
-    if (response?.data != null) {
-      return response?.data?.data ?? [];
-    }
-    return [];
   }
 
   Future<void> _createWorld(WorldModel world) async {

@@ -64,7 +64,7 @@ class _AllCharacterViewState extends State<AllCharacterView> {
             onDone: (character) => _createCharacter(character),
           ).showAsDialog(context);
         },
-        tooltip: "Add new world",
+        tooltip: "Add new character",
         child: const Icon(Icons.add),
       ),
       body: LoadingListView.wrap(

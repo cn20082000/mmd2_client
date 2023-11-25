@@ -53,6 +53,23 @@ class SongClient extends BaseClient {
     return null;
   }
 
+  Future<BaseModel<PagingModel<ProducerModel>>?> getAllProducerLite() async {
+    try {
+      final response = await dio.post("/producer/lite");
+
+      return BaseModel.fromJson(
+        response.data,
+        (baseMap) => PagingModel.fromJson(
+          baseMap,
+          (itemMap) => ProducerModel.fromJson(itemMap),
+        ),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
+
   Future<BaseModel<SongModel>?> createSong(SongModel body) async {
     try {
       final response = await dio.post("/song", data: body.toJson());
@@ -67,11 +84,11 @@ class SongClient extends BaseClient {
     return null;
   }
 
-  Future<BaseModel<PagingModel<SongModel>>?> getPagingSong() async {
+  Future<BaseModel<PagingModel<SongModel>>?> getPagingSong(int pageIndex, int pageSize) async {
     try {
       final response = await dio.post("/song/paging", data: {
-        "pageIndex": 0,
-        "pageSize": 9999,
+        "pageIndex": pageIndex,
+        "pageSize": pageSize,
       });
 
       return BaseModel.fromJson(

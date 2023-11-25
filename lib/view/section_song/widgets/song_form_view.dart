@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:mmd2/data/client/song_client.dart';
 import 'package:mmd2/data/model/producer_model.dart';
 import 'package:mmd2/data/model/song_model.dart';
 
 class SongFormView extends StatefulWidget {
   final String title;
   final SongModel? item;
-  final List<ProducerModel> producerList;
   final void Function(SongModel)? onDone;
 
-  const SongFormView({super.key, required this.title, this.item, required this.producerList, this.onDone});
+  const SongFormView({super.key, required this.title, this.item, this.onDone});
 
   @override
   State<SongFormView> createState() => _SongFormViewState();
 }
 
 class _SongFormViewState extends State<SongFormView> {
+  final songClient = SongClient();
+
   final nameCtrl = TextEditingController();
   final urlCtrl = TextEditingController();
   final descriptionCtrl = TextEditingController();
+
+  final producerList = <ProducerModel>[];
   final selectedProducer = <ProducerModel>[];
 
   @override
@@ -28,6 +32,12 @@ class _SongFormViewState extends State<SongFormView> {
     descriptionCtrl.text = widget.item?.description ?? "";
     selectedProducer.clear();
     selectedProducer.addAll(widget.item?.producers ?? []);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getAllProducerLite();
   }
 
   @override
@@ -74,20 +84,22 @@ class _SongFormViewState extends State<SongFormView> {
               },
             ),
             PopupMenuButton(
-              itemBuilder: (_) => widget.producerList.map((e) => PopupMenuItem<ProducerModel>(
-                value: e,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: selectedProducer.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(e.name ?? ""),
-                  ],
-                ),
-              )).toList(),
+              itemBuilder: (_) => producerList
+                  .map((e) => PopupMenuItem<ProducerModel>(
+                        value: e,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: selectedProducer.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(e.name ?? ""),
+                          ],
+                        ),
+                      ))
+                  .toList(),
               initialValue: selectedProducer.lastOrNull,
               onSelected: (result) {
                 setState(() {
@@ -128,10 +140,18 @@ class _SongFormViewState extends State<SongFormView> {
   }
 
   SongModel get _buildSong => SongModel(
-    id: widget.item?.id,
-    name: nameCtrl.text.trim(),
-    url: urlCtrl.text.trim(),
-    description: descriptionCtrl.text.trim(),
-    producers: selectedProducer,
-  );
+        id: widget.item?.id,
+        name: nameCtrl.text.trim(),
+        url: urlCtrl.text.trim(),
+        description: descriptionCtrl.text.trim(),
+        producers: selectedProducer,
+      );
+
+  Future<void> _getAllProducerLite() async {
+    final response = await songClient.getAllProducerLite();
+    if (response?.data != null) {
+      producerList.clear();
+      producerList.addAll(response?.data?.data ?? []);
+    }
+  }
 }

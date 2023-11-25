@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mmd2/common/app.dart';
 import 'package:mmd2/data/client/system_client.dart';
+import 'package:mmd2/util/desktop_scroll_behavior.dart';
 import 'package:mmd2/view/home_view.dart';
 
 void main() async {
@@ -9,6 +10,7 @@ void main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'Flutter Demo',
+    scrollBehavior: DesktopScrollBehavior(),
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       useMaterial3: true,

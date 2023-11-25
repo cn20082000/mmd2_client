@@ -12,7 +12,7 @@ class LoadingController {
     }
   }
 
-  void removeListener(void Function() value) => _listeners.remove(value);
+  void clearListener() => _listeners.clear();
 
   bool get loading => _loading;
 

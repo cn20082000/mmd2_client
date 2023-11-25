@@ -6,21 +6,48 @@ class LoadingListView extends StatefulWidget {
   final LoadingListController controller;
   final Widget Function(BuildContext context, int index, dynamic item) itemBuilder;
   final ELoadingListType type;
+  final Axis scrollDirection;
+  final EdgeInsetsGeometry? padding;
 
-  const LoadingListView({super.key, required this.controller, required this.itemBuilder, this.type = ELoadingListType.separated});
+  const LoadingListView({
+    super.key,
+    required this.controller,
+    required this.itemBuilder,
+    this.type = ELoadingListType.separated,
+    this.scrollDirection = Axis.vertical,
+    this.padding = const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 64),
+  });
 
-  factory LoadingListView.separated({key, required controller, required itemBuilder}) => LoadingListView(
+  factory LoadingListView.separated({
+    Key? key,
+    required LoadingListController controller,
+    required Widget Function(BuildContext context, int index, dynamic item) itemBuilder,
+    Axis scrollDirection = Axis.vertical,
+    EdgeInsetsGeometry? padding = const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 64),
+  }) =>
+      LoadingListView(
         key: key,
         controller: controller,
         itemBuilder: itemBuilder,
         type: ELoadingListType.separated,
+        scrollDirection: scrollDirection,
+        padding: padding,
       );
 
-  factory LoadingListView.wrap({key, required controller, required itemBuilder}) => LoadingListView(
+  factory LoadingListView.wrap({
+    Key? key,
+    required LoadingListController controller,
+    required Widget Function(BuildContext context, int index, dynamic item) itemBuilder,
+    Axis scrollDirection = Axis.vertical,
+    EdgeInsetsGeometry? padding = const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 64),
+  }) =>
+      LoadingListView(
         key: key,
         controller: controller,
         itemBuilder: itemBuilder,
         type: ELoadingListType.wrap,
+        scrollDirection: scrollDirection,
+        padding: padding,
       );
 
   @override
@@ -54,14 +81,10 @@ class _LoadingListViewState extends State<LoadingListView> {
   Widget _buildListSeparated(BuildContext context) {
     return ListView.separated(
       controller: controller.scrollController,
-      padding: const EdgeInsets.only(
-        top: 16,
-        left: 16,
-        right: 16,
-        bottom: 64,
-      ),
+      scrollDirection: widget.scrollDirection,
+      padding: widget.padding,
       itemCount: controller.data.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 4),
+      separatorBuilder: (_, __) => const SizedBox(height: 4, width: 4),
       itemBuilder: (ctx, index) => widget.itemBuilder.call(ctx, index, controller.data[index]),
     );
   }
@@ -69,13 +92,10 @@ class _LoadingListViewState extends State<LoadingListView> {
   Widget _buildListWrap(BuildContext context) {
     return SingleChildScrollView(
       controller: controller.scrollController,
-      padding: const EdgeInsets.only(
-        top: 16,
-        left: 16,
-        right: 16,
-        bottom: 64,
-      ),
+      scrollDirection: widget.scrollDirection,
+      padding: widget.padding,
       child: Wrap(
+        direction: widget.scrollDirection == Axis.vertical ? Axis.horizontal : Axis.vertical,
         spacing: 16,
         runSpacing: 16,
         children: List.generate(
