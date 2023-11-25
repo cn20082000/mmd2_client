@@ -6,8 +6,8 @@ import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
 import 'package:mmd2/view/custom/loading/view/loading_view.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
-import 'package:mmd2/view/section_character/widgets/character_form_view.dart';
-import 'package:mmd2/view/section_character/widgets/character_item_view.dart';
+import 'package:mmd2/view/section_character/all_character/widgets/character_form_view.dart';
+import 'package:mmd2/view/section_character/all_character/widgets/character_item_view.dart';
 
 class AllCharacterView extends StatefulWidget {
   const AllCharacterView({super.key});

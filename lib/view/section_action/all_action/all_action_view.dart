@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:mmd2/data/client/song_client.dart';
-import 'package:mmd2/data/model/producer_model.dart';
+import 'package:mmd2/data/client/action_client.dart';
+import 'package:mmd2/data/model/action_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
 import 'package:mmd2/view/custom/loading/view/loading_view.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
-import 'package:mmd2/view/section_song/all_producer/widgets/producer_form_view.dart';
-import 'package:mmd2/view/section_song/all_producer/widgets/producer_item_view.dart';
+import 'package:mmd2/view/section_action/all_action/widgets/action_form_view.dart';
+import 'package:mmd2/view/section_action/all_action/widgets/action_item_view.dart';
 
-class AllProducerView extends StatefulWidget {
-  const AllProducerView({super.key});
+class AllActionView extends StatefulWidget {
+  const AllActionView({super.key});
 
   @override
-  State<AllProducerView> createState() => _AllProducerViewState();
+  State<AllActionView> createState() => _AllActionViewState();
 }
 
-class _AllProducerViewState extends State<AllProducerView> {
-  final songClient = SongClient();
+class _AllActionViewState extends State<AllActionView> {
+  final actionClient = ActionClient();
 
   final loadingCtrl = LoadingListController(20);
 
@@ -35,13 +35,8 @@ class _AllProducerViewState extends State<AllProducerView> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            IconButton(
-              tooltip: "Back",
-              onPressed: Navigator.of(context).pop,
-              icon: const Icon(Icons.arrow_back_ios),
-            ),
             Text(
-              "Producers",
+              "Actions",
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const Spacer(),
@@ -59,23 +54,23 @@ class _AllProducerViewState extends State<AllProducerView> {
       ),
       floatingButton: FloatingActionButton(
         onPressed: () {
-          ProducerFormView(
-            title: "Add new producer",
-            onDone: (producer) => _createProducer(producer),
+          ActionFormView(
+            title: "Add new action",
+            onDone: (action) => _createAction(action),
           ).showAsDialog(context);
         },
-        tooltip: "Add new producer",
+        tooltip: "Add new action",
         child: const Icon(Icons.add),
       ),
       body: LoadingListView.separated(
         controller: loadingCtrl,
-        itemBuilder: (_, __, item) => ProducerItemView(
+        itemBuilder: (_, __, item) => ActionItemView(
           item: item,
           onEdit: () {
-            ProducerFormView(
-              title: "Edit producer",
+            ActionFormView(
+              title: "Edit action",
               item: item,
-              onDone: (producer) => _updateProducer(producer),
+              onDone: (action) => _updateAction(action),
             ).showAsDialog(context);
           },
         ),
@@ -83,27 +78,28 @@ class _AllProducerViewState extends State<AllProducerView> {
     );
   }
 
-  Future<List<ProducerModel>> _getData(int pageIndex, int pageSize) async {
-    final result = <ProducerModel>[];
+  Future<List<ActionModel>> _getData(int pageIndex, int pageSize) async {
+    final result = <ActionModel>[];
 
-    final response = await songClient.getPagingProducer(pageIndex, pageSize);
+    final response = await actionClient.getPagingAction(pageIndex, pageSize);
     if (response?.data != null) {
+      result.clear();
       result.addAll(response?.data?.data ?? []);
     }
 
     return result;
   }
 
-  Future<void> _createProducer(ProducerModel producer) async {
-    final response = await songClient.createProducer(producer);
+  Future<void> _createAction(ActionModel action) async {
+    final response = await actionClient.createAction(action);
 
     if (response?.data != null) {
       loadingCtrl.reload();
     }
   }
 
-  Future<void> _updateProducer(ProducerModel producer) async {
-    final response = await songClient.updateProducer(producer);
+  Future<void> _updateAction(ActionModel action) async {
+    final response = await actionClient.updateAction(action);
 
     if (response?.data != null) {
       loadingCtrl.reload();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class VideoView extends StatefulWidget {
-  const VideoView({super.key});
+class SectionVideoView extends StatefulWidget {
+  const SectionVideoView({super.key});
 
   @override
-  State<VideoView> createState() => _VideoViewState();
+  State<SectionVideoView> createState() => _SectionVideoViewState();
 }
 
-class _VideoViewState extends State<VideoView> {
+class _SectionVideoViewState extends State<SectionVideoView> {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();

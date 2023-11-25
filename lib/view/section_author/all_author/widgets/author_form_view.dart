@@ -162,7 +162,7 @@ class _AuthorFormViewState extends State<AuthorFormView> {
   }
 
   AuthorModel get _buildAuthor => AuthorModel(
-        id: item?.id,
+        id: widget.item?.id,
         profileRelativeUrl: profileRelativeUrlCtrl.text.trim(),
       );
 

@@ -10,7 +10,7 @@ import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/list/basic_item.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
-import 'package:mmd2/view/section_character/widgets/character_form_view.dart';
+import 'package:mmd2/view/section_character/all_character/widgets/character_form_view.dart';
 
 class WorldItemView extends StatefulWidget {
   final WorldItemModel item;

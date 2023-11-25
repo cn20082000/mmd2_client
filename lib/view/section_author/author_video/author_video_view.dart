@@ -73,14 +73,7 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
         controller: loadingCtrl,
         itemBuilder: (_, __, item) => VideoItemView(
           item: item,
-          onEdit: () {
-            // CharacterFormView(
-            //   title: "Edit character",
-            //   item: characterList[index],
-            //   worldList: worldList,
-            //   onDone: (character) => _updateCharacter(character),
-            // ).showAsDialog(context);
-          },
+          onEdit: () {},
         ),
       ),
     );
