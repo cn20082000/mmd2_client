@@ -95,7 +95,7 @@ class _SongFormViewState extends State<SongFormView> {
                               child: selectedProducer.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
                             ),
                             const SizedBox(width: 8),
-                            Text(e.name ?? ""),
+                            Expanded(child: Text(e.name ?? "")),
                           ],
                         ),
                       ))
@@ -112,12 +112,22 @@ class _SongFormViewState extends State<SongFormView> {
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  selectedProducer.isEmpty ? "Select producers" : selectedProducer.map((e) => e.name ?? "").join(", "),
-                  style: Theme.of(context).textTheme.bodyLarge,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedProducer.isEmpty ? "Select producers" : selectedProducer.map((e) => e.name ?? "").join(", "),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: selectedProducer.isEmpty ? Colors.grey : null,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_drop_down),
+                  ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

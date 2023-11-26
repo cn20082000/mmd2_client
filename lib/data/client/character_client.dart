@@ -138,4 +138,21 @@ class CharacterClient extends BaseClient {
     }
     return null;
   }
+
+  Future<BaseModel<PagingModel<CharacterModel>>?> getAllCharacterLite() async {
+    try {
+      final response = await dio.post("/character/lite");
+
+      return BaseModel.fromJson(
+        response.data,
+        (baseMap) => PagingModel.fromJson(
+          baseMap,
+          (itemMap) => CharacterModel.fromJson(itemMap),
+        ),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
 }

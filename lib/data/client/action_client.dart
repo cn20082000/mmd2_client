@@ -51,4 +51,21 @@ class ActionClient extends BaseClient {
     }
     return null;
   }
+
+  Future<BaseModel<PagingModel<ActionModel>>?> getAllActionLite() async {
+    try {
+      final response = await dio.post("/action/lite");
+
+      return BaseModel.fromJson(
+        response.data,
+        (baseMap) => PagingModel.fromJson(
+          baseMap,
+          (itemMap) => ActionModel.fromJson(itemMap),
+        ),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
 }

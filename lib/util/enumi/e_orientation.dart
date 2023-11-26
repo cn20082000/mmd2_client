@@ -15,4 +15,13 @@ enum EOrientation {
     }
     return null;
   }
+
+  String get title {
+    switch (this) {
+      case EOrientation.landscape:
+        return "Landscape";
+      case EOrientation.portrait:
+        return "Portrait";
+    }
+  }
 }

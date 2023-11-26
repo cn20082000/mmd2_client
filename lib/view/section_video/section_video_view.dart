@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mmd2/view/custom/navigation/section_navigator.dart';
+import 'package:mmd2/view/section_video/query_video/query_video_view.dart';
 
-class SectionVideoView extends StatefulWidget {
+class SectionVideoView extends StatelessWidget {
   const SectionVideoView({super.key});
 
   @override
-  State<SectionVideoView> createState() => _SectionVideoViewState();
-}
-
-class _SectionVideoViewState extends State<SectionVideoView> {
-  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return SectionNavigator(builder: (_) => const QueryVideoView());
   }
 }

@@ -11,7 +11,7 @@ class SongClient extends BaseClient {
 
       return BaseModel.fromJson(
         response.data,
-            (baseMap) => ProducerModel.fromJson(baseMap),
+        (baseMap) => ProducerModel.fromJson(baseMap),
       );
     } on Exception catch (ex) {
       debugPrint(ex.toString());
@@ -45,7 +45,7 @@ class SongClient extends BaseClient {
 
       return BaseModel.fromJson(
         response.data,
-            (baseMap) => ProducerModel.fromJson(baseMap),
+        (baseMap) => ProducerModel.fromJson(baseMap),
       );
     } on Exception catch (ex) {
       debugPrint(ex.toString());
@@ -111,6 +111,23 @@ class SongClient extends BaseClient {
       return BaseModel.fromJson(
         response.data,
         (baseMap) => SongModel.fromJson(baseMap),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
+
+  Future<BaseModel<PagingModel<SongModel>>?> getAllSongLite() async {
+    try {
+      final response = await dio.post("/producer/lite");
+
+      return BaseModel.fromJson(
+        response.data,
+        (baseMap) => PagingModel.fromJson(
+          baseMap,
+          (itemMap) => SongModel.fromJson(itemMap),
+        ),
       );
     } on Exception catch (ex) {
       debugPrint(ex.toString());

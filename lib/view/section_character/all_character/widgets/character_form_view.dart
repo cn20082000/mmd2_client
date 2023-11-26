@@ -94,7 +94,7 @@ class _CharacterFormViewState extends State<CharacterFormView> {
                               child: e.id == selectedWorld?.id ? const Icon(Icons.check, size: 16) : null,
                             ),
                             const SizedBox(width: 8),
-                            Text(e.name ?? ""),
+                            Expanded(child: Text(e.name ?? "")),
                           ],
                         ),
                       ))
@@ -107,9 +107,19 @@ class _CharacterFormViewState extends State<CharacterFormView> {
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(
-                  selectedWorld?.name ?? "Select world",
-                  style: Theme.of(context).textTheme.bodyLarge,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedWorld?.name ?? "Select world",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: selectedWorld == null ? Colors.grey : null,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_drop_down),
+                  ],
                 ),
               ),
             )

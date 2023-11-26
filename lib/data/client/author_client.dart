@@ -79,4 +79,21 @@ class AuthorClient extends BaseClient {
     }
     return null;
   }
+
+  Future<BaseModel<PagingModel<AuthorModel>>?> getAllAuthorLite() async {
+    try {
+      final response = await dio.post("/author/lite");
+
+      return BaseModel.fromJson(
+        response.data,
+        (baseMap) => PagingModel.fromJson(
+          baseMap,
+          (itemMap) => AuthorModel.fromJson(itemMap),
+        ),
+      );
+    } on Exception catch (ex) {
+      debugPrint(ex.toString());
+    }
+    return null;
+  }
 }
