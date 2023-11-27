@@ -99,6 +99,7 @@ class _CharacterFormViewState extends State<CharacterFormView> {
                         ),
                       ))
                   .toList(),
+              tooltip: "Select world",
               initialValue: selectedWorld,
               onSelected: (result) {
                 setState(() {

@@ -24,14 +24,15 @@ class _SectionScreenState extends State<SectionScreen> {
               child: widget.appBar,
             ),
             Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                ),
-                child: Container(
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                  ),
                   color: Colors.white,
-                  child: widget.body,
                 ),
+                clipBehavior: Clip.hardEdge,
+                child: widget.body,
               ),
             ),
           ],

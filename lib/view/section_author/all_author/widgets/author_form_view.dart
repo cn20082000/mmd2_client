@@ -4,7 +4,7 @@ import 'package:mmd2/common/app.dart';
 import 'package:mmd2/common/constants.dart';
 import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/util/extension/string_ext.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:mmd2/util/utils.dart';
 
 class AuthorFormView extends StatefulWidget {
   final String title;
@@ -112,9 +112,7 @@ class _AuthorFormViewState extends State<AuthorFormView> {
                           ),
                           const SizedBox(width: 8),
                           IconButton(
-                            onPressed: () {
-                              launchUrl(Uri.parse(profileUrlCtrl.text));
-                            },
+                            onPressed: () => Utils.launchUrl(profileUrlCtrl.text),
                             icon: const Icon(Icons.call_made),
                           )
                         ],

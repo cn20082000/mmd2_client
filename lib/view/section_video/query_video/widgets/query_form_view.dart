@@ -117,6 +117,7 @@ class _QueryFormViewState extends State<QueryFormView> {
                 ),
               ))
           .toList(),
+      tooltip: "Select authors",
       initialValue: query.authors.lastOrNull,
       onSelected: (result) {
         setState(() {
@@ -165,6 +166,7 @@ class _QueryFormViewState extends State<QueryFormView> {
                 ),
               ))
           .toList(),
+      tooltip: "Select status",
       initialValue: query.status.lastOrNull,
       onSelected: (result) {
         setState(() {
@@ -213,6 +215,7 @@ class _QueryFormViewState extends State<QueryFormView> {
                 ),
               ))
           .toList(),
+      tooltip: "Select orientations",
       initialValue: query.orientations.lastOrNull,
       onSelected: (result) {
         setState(() {
@@ -261,6 +264,7 @@ class _QueryFormViewState extends State<QueryFormView> {
                 ),
               ))
           .toList(),
+      tooltip: "Select songs",
       initialValue: query.songs.lastOrNull,
       onSelected: (result) {
         setState(() {
@@ -309,6 +313,7 @@ class _QueryFormViewState extends State<QueryFormView> {
                 ),
               ))
           .toList(),
+      tooltip: "Select characters",
       initialValue: query.characters.lastOrNull,
       onSelected: (result) {
         setState(() {
@@ -357,6 +362,7 @@ class _QueryFormViewState extends State<QueryFormView> {
                 ),
               ))
           .toList(),
+      tooltip: "Select actions",
       initialValue: query.actions.lastOrNull,
       onSelected: (result) {
         setState(() {

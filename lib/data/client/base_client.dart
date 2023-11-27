@@ -8,6 +8,7 @@ import 'package:mmd2/common/constants.dart';
 class BaseClient {
   static Dio? _dio;
 
+  @protected
   Dio get dio {
     if (_dio == null) {
       _initialDio();

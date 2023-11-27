@@ -22,49 +22,51 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: Colors.grey.shade100,
       body: Row(
         children: [
-          Column(
-            children: [
-              NavigationButton(
-                icon: Icons.movie,
-                tooltip: "Videos",
-                highlight: index == 0,
-                onPressed: () {
-                  if (index != 0) setState(() => index = 0);
-                },
-              ),
-              NavigationButton(
-                icon: Icons.video_camera_front,
-                tooltip: "Authors",
-                highlight: index == 1,
-                onPressed: () {
-                  if (index != 1) setState(() => index = 1);
-                },
-              ),
-              NavigationButton(
-                icon: Icons.music_note,
-                tooltip: "Songs & Producers",
-                highlight: index == 2,
-                onPressed: () {
-                  if (index != 2) setState(() => index = 2);
-                },
-              ),
-              NavigationButton(
-                icon: Icons.person,
-                tooltip: "Characters & Worlds",
-                highlight: index == 3,
-                onPressed: () {
-                  if (index != 3) setState(() => index = 3);
-                },
-              ),
-              NavigationButton(
-                icon: Icons.directions_run,
-                tooltip: "Actions",
-                highlight: index == 4,
-                onPressed: () {
-                  if (index != 4) setState(() => index = 4);
-                },
-              ),
-            ],
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                NavigationButton(
+                  icon: Icons.movie,
+                  tooltip: "Videos",
+                  highlight: index == 0,
+                  onPressed: () {
+                    if (index != 0) setState(() => index = 0);
+                  },
+                ),
+                NavigationButton(
+                  icon: Icons.video_camera_front,
+                  tooltip: "Authors",
+                  highlight: index == 1,
+                  onPressed: () {
+                    if (index != 1) setState(() => index = 1);
+                  },
+                ),
+                NavigationButton(
+                  icon: Icons.music_note,
+                  tooltip: "Songs & Producers",
+                  highlight: index == 2,
+                  onPressed: () {
+                    if (index != 2) setState(() => index = 2);
+                  },
+                ),
+                NavigationButton(
+                  icon: Icons.person,
+                  tooltip: "Characters & Worlds",
+                  highlight: index == 3,
+                  onPressed: () {
+                    if (index != 3) setState(() => index = 3);
+                  },
+                ),
+                NavigationButton(
+                  icon: Icons.directions_run,
+                  tooltip: "Actions",
+                  highlight: index == 4,
+                  onPressed: () {
+                    if (index != 4) setState(() => index = 4);
+                  },
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: IndexedStack(

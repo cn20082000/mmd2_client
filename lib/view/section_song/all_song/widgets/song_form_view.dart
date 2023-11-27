@@ -100,6 +100,7 @@ class _SongFormViewState extends State<SongFormView> {
                         ),
                       ))
                   .toList(),
+              tooltip: "Select producers",
               initialValue: selectedProducer.lastOrNull,
               onSelected: (result) {
                 setState(() {

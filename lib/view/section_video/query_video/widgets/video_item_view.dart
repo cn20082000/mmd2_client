@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mmd2/data/model/video_model.dart';
+import 'package:mmd2/util/utils.dart';
 import 'package:mmd2/view/custom/list/basic_item.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:mmd2/util/extension/text_style_extension.dart';
 
 class VideoItemView extends StatelessWidget {
@@ -23,9 +23,7 @@ class VideoItemView extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             color: Colors.white,
             child: InkWell(
-              onTap: () {
-                launchUrl(Uri.parse(item.cloudUrl ?? ""));
-              },
+              onTap: () => Utils.launchUrl(item.cloudUrl ?? ""),
               borderRadius: BorderRadius.circular(8),
               child: const SizedBox(
                 height: 64,
