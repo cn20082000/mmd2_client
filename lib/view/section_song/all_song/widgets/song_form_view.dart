@@ -20,9 +20,9 @@ class _SongFormViewState extends State<SongFormView> {
   final nameCtrl = TextEditingController();
   final urlCtrl = TextEditingController();
   final descriptionCtrl = TextEditingController();
+  final selectedProducer = <ProducerModel>[];
 
   final producerList = <ProducerModel>[];
-  final selectedProducer = <ProducerModel>[];
 
   @override
   void initState() {
@@ -30,7 +30,6 @@ class _SongFormViewState extends State<SongFormView> {
     nameCtrl.text = widget.item?.name ?? "";
     urlCtrl.text = widget.item?.url ?? "";
     descriptionCtrl.text = widget.item?.description ?? "";
-    selectedProducer.clear();
     selectedProducer.addAll(widget.item?.producers ?? []);
   }
 

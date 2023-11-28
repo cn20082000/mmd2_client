@@ -9,7 +9,9 @@ import 'package:mmd2/util/enumi/e_video_status.dart';
 class VideoModel extends IToJson {
   String? id;
   String? name;
+  String? cloudRelativeUrl;
   String? cloudUrl;
+  String? localRelativeUrl;
   String? localUrl;
   EOrientation? orientation;
   EVideoStatus? status;
@@ -19,12 +21,25 @@ class VideoModel extends IToJson {
   List<ActionModel>? actions;
 
   VideoModel(
-      {this.id, this.name, this.cloudUrl, this.localUrl, this.orientation, this.status, this.author, this.songs, this.characters, this.actions});
+      {this.id,
+      this.name,
+      this.cloudRelativeUrl,
+      this.cloudUrl,
+      this.localRelativeUrl,
+      this.localUrl,
+      this.orientation,
+      this.status,
+      this.author,
+      this.songs,
+      this.characters,
+      this.actions});
 
   factory VideoModel.fromJson(Map<String, dynamic> json) => VideoModel(
         id: json["id"] as String?,
         name: json["name"] as String?,
+        cloudRelativeUrl: json["cloudRelativeUrl"] as String?,
         cloudUrl: json["cloudUrl"] as String?,
+        localRelativeUrl: json["localRelativeUrl"] as String?,
         localUrl: json["localUrl"] as String?,
         orientation: EOrientation.enumOf(json["orientation"] as String?),
         status: EVideoStatus.enumOf(json["status"] as String?),
@@ -38,7 +53,9 @@ class VideoModel extends IToJson {
   Map<String, dynamic> toJson({bool includeNullValue = false}) => {
         "id": id,
         "name": name,
+        "cloudRelativeUrl": cloudRelativeUrl,
         "cloudUrl": cloudUrl,
+        "localRelativeUrl": localRelativeUrl,
         "localUrl": localUrl,
         "orientation": orientation?.value,
         "status": status?.value,

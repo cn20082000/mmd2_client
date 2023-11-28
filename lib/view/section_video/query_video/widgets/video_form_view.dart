@@ -4,53 +4,52 @@ import 'package:mmd2/data/client/author_client.dart';
 import 'package:mmd2/data/client/character_client.dart';
 import 'package:mmd2/data/client/song_client.dart';
 import 'package:mmd2/data/model/action_model.dart';
-import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/data/model/character_model.dart';
 import 'package:mmd2/data/model/song_model.dart';
-import 'package:mmd2/data/model/video_query_model.dart';
+import 'package:mmd2/data/model/video_model.dart';
 import 'package:mmd2/util/enumi/e_orientation.dart';
 import 'package:mmd2/util/enumi/e_video_status.dart';
 
-class QueryFormView extends StatefulWidget {
+class VideoFormView extends StatefulWidget {
   final String title;
-  final VideoQueryModel query;
-  final void Function(VideoQueryModel)? onDone;
+  final VideoModel? item;
+  final void Function(VideoModel)? onDone;
 
-  const QueryFormView({super.key, required this.title, required this.query, this.onDone});
+  const VideoFormView({super.key, required this.title, this.item, this.onDone});
 
   @override
-  State<QueryFormView> createState() => _QueryFormViewState();
+  State<VideoFormView> createState() => _VideoFormViewState();
 }
 
-class _QueryFormViewState extends State<QueryFormView> {
+class _VideoFormViewState extends State<VideoFormView> {
   final actionClient = ActionClient();
   final authorClient = AuthorClient();
   final characterClient = CharacterClient();
   final songClient = SongClient();
 
   final nameCtrl = TextEditingController();
-  final selectedOrientations = <EOrientation>[];
-  final selectedStatus = <EVideoStatus>[];
-  final selectedAuthors = <AuthorModel>[];
+  final authorCtrl = TextEditingController();
+  final localRelativeUrl = TextEditingController();
+  EOrientation? selectedOrientation;
+  EVideoStatus? selectedStatus;
   final selectedSongs = <SongModel>[];
   final selectedCharacters = <CharacterModel>[];
   final selectedActions = <ActionModel>[];
 
   final actionList = <ActionModel>[];
-  final authorList = <AuthorModel>[];
   final characterList = <CharacterModel>[];
   final songList = <SongModel>[];
 
   @override
   void initState() {
     super.initState();
-    nameCtrl.text = widget.query.name ?? "";
-    selectedOrientations.addAll(widget.query.orientations);
-    selectedStatus.addAll(widget.query.status);
-    selectedAuthors.addAll(widget.query.authors);
-    selectedSongs.addAll(widget.query.songs);
-    selectedCharacters.addAll(widget.query.characters);
-    selectedActions.addAll(widget.query.actions);
+    nameCtrl.text = widget.item?.name ?? "";
+    authorCtrl.text = widget.item?.author?.name ?? "";
+    selectedOrientation = widget.item?.orientation;
+    selectedStatus = widget.item?.status;
+    selectedSongs.addAll(widget.item?.songs ?? []);
+    selectedCharacters.addAll(widget.item?.characters ?? []);
+    selectedActions.addAll(widget.item?.actions ?? []);
   }
 
   @override
@@ -71,14 +70,27 @@ class _QueryFormViewState extends State<QueryFormView> {
           children: [
             TextField(
               controller: nameCtrl,
-              autofocus: true,
-              textInputAction: TextInputAction.next,
-              maxLength: 255,
+              readOnly: true,
               decoration: const InputDecoration(
                 labelText: "Name",
               ),
             ),
-            _buildAuthorFilter(context),
+            TextField(
+              controller: authorCtrl,
+              readOnly: true,
+              decoration: const InputDecoration(
+                labelText: "Author",
+              ),
+            ),
+            TextField(
+              controller: localRelativeUrl,
+              autofocus: true,
+              textInputAction: TextInputAction.next,
+              maxLength: 255,
+              decoration: const InputDecoration(
+                labelText: "Local relative url",
+              ),
+            ),
             _buildOrientationFilter(context),
             _buildVideoStatusFilter(context),
             _buildSongFilter(context),
@@ -96,7 +108,7 @@ class _QueryFormViewState extends State<QueryFormView> {
         ),
         FilledButton(
           onPressed: () {
-            widget.onDone?.call(_buildQuery);
+            widget.onDone?.call(_buildVideo);
             Navigator.pop(context);
           },
           child: const Text("Done"),
@@ -105,81 +117,32 @@ class _QueryFormViewState extends State<QueryFormView> {
     );
   }
 
-  Widget _buildAuthorFilter(BuildContext context) {
+  Widget _buildOrientationFilter(BuildContext context) {
     return PopupMenuButton(
-      itemBuilder: (_) => authorList
-          .map((e) => PopupMenuItem<AuthorModel>(
+      itemBuilder: (_) => EOrientation.values
+          .map((e) => PopupMenuItem<EOrientation>(
                 value: e,
                 child: Row(
                   children: [
                     SizedBox(
                       height: 16,
                       width: 16,
-                      child: selectedAuthors.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
+                      child: selectedOrientation == e ? const Icon(Icons.check, size: 16) : null,
                     ),
                     const SizedBox(width: 8),
-                    Text(e.name ?? ""),
+                    Expanded(child: Text(e.title)),
                   ],
                 ),
               ))
           .toList(),
-      tooltip: "Select authors",
-      initialValue: selectedAuthors.lastOrNull,
-      onSelected: (result) {
-        setState(() {
-          if (selectedAuthors.map((e) => e.id).contains(result.id)) {
-            selectedAuthors.removeWhere((element) => element.id == result.id);
-          } else {
-            selectedAuthors.add(result);
-          }
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                selectedAuthors.isEmpty ? "Select authors" : selectedAuthors.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedAuthors.isEmpty ? Colors.grey : null,
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(Icons.arrow_drop_down),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOrientationFilter(BuildContext context) {
-    return PopupMenuButton(
-      itemBuilder: (_) => EOrientation.values
-          .map((e) => PopupMenuItem<EOrientation>(
-        value: e,
-        child: Row(
-          children: [
-            SizedBox(
-              height: 16,
-              width: 16,
-              child: selectedOrientations.contains(e) ? const Icon(Icons.check, size: 16) : null,
-            ),
-            const SizedBox(width: 8),
-            Expanded(child: Text(e.title)),
-          ],
-        ),
-      ))
-          .toList(),
       tooltip: "Select orientations",
-      initialValue: selectedOrientations.lastOrNull,
+      initialValue: selectedOrientation,
       onSelected: (result) {
         setState(() {
-          if (selectedOrientations.contains(result)) {
-            selectedOrientations.remove(result);
+          if (selectedOrientation == result) {
+            selectedOrientation = null;
           } else {
-            selectedOrientations.add(result);
+            selectedOrientation = result;
           }
         });
       },
@@ -189,10 +152,10 @@ class _QueryFormViewState extends State<QueryFormView> {
           children: [
             Expanded(
               child: Text(
-                selectedOrientations.isEmpty ? "Select orientations" : selectedOrientations.map((e) => e.title).join(", "),
+                selectedOrientation?.title ?? "Select orientations",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedOrientations.isEmpty ? Colors.grey : null,
-                ),
+                      color: selectedOrientation == null ? Colors.grey : null,
+                    ),
               ),
             ),
             const SizedBox(width: 8),
@@ -213,7 +176,7 @@ class _QueryFormViewState extends State<QueryFormView> {
                     SizedBox(
                       height: 16,
                       width: 16,
-                      child: selectedStatus.contains(e) ? const Icon(Icons.check, size: 16) : null,
+                      child: selectedStatus == e ? const Icon(Icons.check, size: 16) : null,
                     ),
                     const SizedBox(width: 8),
                     Expanded(child: Text(e.title)),
@@ -222,13 +185,13 @@ class _QueryFormViewState extends State<QueryFormView> {
               ))
           .toList(),
       tooltip: "Select status",
-      initialValue: selectedStatus.lastOrNull,
+      initialValue: selectedStatus,
       onSelected: (result) {
         setState(() {
-          if (selectedStatus.contains(result)) {
-            selectedStatus.remove(result);
+          if (selectedStatus == result) {
+            selectedStatus = null;
           } else {
-            selectedStatus.add(result);
+            selectedStatus = result;
           }
         });
       },
@@ -238,10 +201,10 @@ class _QueryFormViewState extends State<QueryFormView> {
           children: [
             Expanded(
               child: Text(
-                selectedStatus.isEmpty ? "Select status" : selectedStatus.map((e) => e.title).join(", "),
+                selectedStatus?.title ?? "Select status",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedStatus.isEmpty ? Colors.grey : null,
-                ),
+                      color: selectedStatus == null ? Colors.grey : null,
+                    ),
               ),
             ),
             const SizedBox(width: 8),
@@ -289,8 +252,8 @@ class _QueryFormViewState extends State<QueryFormView> {
               child: Text(
                 selectedSongs.isEmpty ? "Select songs" : selectedSongs.map((e) => e.name ?? "").join(", "),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedSongs.isEmpty ? Colors.grey : null,
-                ),
+                      color: selectedSongs.isEmpty ? Colors.grey : null,
+                    ),
               ),
             ),
             const SizedBox(width: 8),
@@ -338,8 +301,8 @@ class _QueryFormViewState extends State<QueryFormView> {
               child: Text(
                 selectedCharacters.isEmpty ? "Select characters" : selectedCharacters.map((e) => e.name ?? "").join(", "),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedCharacters.isEmpty ? Colors.grey : null,
-                ),
+                      color: selectedCharacters.isEmpty ? Colors.grey : null,
+                    ),
               ),
             ),
             const SizedBox(width: 8),
@@ -387,8 +350,8 @@ class _QueryFormViewState extends State<QueryFormView> {
               child: Text(
                 selectedActions.isEmpty ? "Select actions" : selectedActions.map((e) => e.name ?? "").join(", "),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedActions.isEmpty ? Colors.grey : null,
-                ),
+                      color: selectedActions.isEmpty ? Colors.grey : null,
+                    ),
               ),
             ),
             const SizedBox(width: 8),
@@ -399,20 +362,19 @@ class _QueryFormViewState extends State<QueryFormView> {
     );
   }
 
-  VideoQueryModel get _buildQuery => VideoQueryModel(
-    name: nameCtrl.text,
-    orientations: selectedOrientations,
-    status: selectedStatus,
-    authors: selectedAuthors,
-    songs: selectedSongs,
-    characters: selectedCharacters,
-    actions: selectedActions,
-  );
+  VideoModel get _buildVideo => VideoModel(
+        id: widget.item?.id,
+        localRelativeUrl: widget.item?.localRelativeUrl,
+        orientation: selectedOrientation,
+        status: selectedStatus,
+        songs: selectedSongs,
+        characters: selectedCharacters,
+        actions: selectedActions,
+      );
 
   Future<void> _getAllLite() async {
     final response = await Future.wait([
       actionClient.getAllActionLite(),
-      authorClient.getAllAuthorLite(),
       characterClient.getAllCharacterLite(),
       songClient.getAllSongLite(),
     ]);
@@ -423,18 +385,13 @@ class _QueryFormViewState extends State<QueryFormView> {
     }
 
     if (response[1]?.data != null) {
-      authorList.clear();
-      authorList.addAll((response[1]?.data?.data ?? []) as Iterable<AuthorModel>);
+      characterList.clear();
+      characterList.addAll((response[1]?.data?.data ?? []) as Iterable<CharacterModel>);
     }
 
     if (response[2]?.data != null) {
-      characterList.clear();
-      characterList.addAll((response[2]?.data?.data ?? []) as Iterable<CharacterModel>);
-    }
-
-    if (response[3]?.data != null) {
       songList.clear();
-      songList.addAll((response[3]?.data?.data ?? []) as Iterable<SongModel>);
+      songList.addAll((response[2]?.data?.data ?? []) as Iterable<SongModel>);
     }
   }
 }

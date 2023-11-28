@@ -120,7 +120,7 @@ class SongClient extends BaseClient {
 
   Future<BaseModel<PagingModel<SongModel>>?> getAllSongLite() async {
     try {
-      final response = await dio.post("/producer/lite");
+      final response = await dio.post("/song/lite");
 
       return BaseModel.fromJson(
         response.data,
