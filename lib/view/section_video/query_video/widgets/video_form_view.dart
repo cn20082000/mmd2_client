@@ -9,6 +9,7 @@ import 'package:mmd2/data/model/song_model.dart';
 import 'package:mmd2/data/model/video_model.dart';
 import 'package:mmd2/util/enumi/e_orientation.dart';
 import 'package:mmd2/util/enumi/e_video_status.dart';
+import 'package:mmd2/util/extension/text_style_extension.dart';
 
 class VideoFormView extends StatefulWidget {
   final String title;
@@ -29,7 +30,7 @@ class _VideoFormViewState extends State<VideoFormView> {
 
   final nameCtrl = TextEditingController();
   final authorCtrl = TextEditingController();
-  final localRelativeUrl = TextEditingController();
+  final localRelativeUrlCtrl = TextEditingController();
   EOrientation? selectedOrientation;
   EVideoStatus? selectedStatus;
   final selectedSongs = <SongModel>[];
@@ -45,6 +46,7 @@ class _VideoFormViewState extends State<VideoFormView> {
     super.initState();
     nameCtrl.text = widget.item?.name ?? "";
     authorCtrl.text = widget.item?.author?.name ?? "";
+    localRelativeUrlCtrl.text = widget.item?.localRelativeUrl ?? "";
     selectedOrientation = widget.item?.orientation;
     selectedStatus = widget.item?.status;
     selectedSongs.addAll(widget.item?.songs ?? []);
@@ -83,7 +85,7 @@ class _VideoFormViewState extends State<VideoFormView> {
               ),
             ),
             TextField(
-              controller: localRelativeUrl,
+              controller: localRelativeUrlCtrl,
               autofocus: true,
               textInputAction: TextInputAction.next,
               maxLength: 255,
@@ -153,9 +155,7 @@ class _VideoFormViewState extends State<VideoFormView> {
             Expanded(
               child: Text(
                 selectedOrientation?.title ?? "Select orientations",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: selectedOrientation == null ? Colors.grey : null,
-                    ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedOrientation == null ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -202,9 +202,7 @@ class _VideoFormViewState extends State<VideoFormView> {
             Expanded(
               child: Text(
                 selectedStatus?.title ?? "Select status",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: selectedStatus == null ? Colors.grey : null,
-                    ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedStatus == null ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -228,7 +226,17 @@ class _VideoFormViewState extends State<VideoFormView> {
                       child: selectedSongs.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
                     ),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(e.name ?? "")),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: e.name ?? ""),
+                          TextSpan(
+                            text: (e.producers?.length ?? 0) > 0 ? " (${e.producers?.map((e) => e.name ?? "").join(", ")})" : "",
+                            style: Theme.of(context).textTheme.bodyMedium?.grey,
+                          ),
+                        ]),
+                      ),
+                    ),
                   ],
                 ),
               ))
@@ -251,9 +259,7 @@ class _VideoFormViewState extends State<VideoFormView> {
             Expanded(
               child: Text(
                 selectedSongs.isEmpty ? "Select songs" : selectedSongs.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: selectedSongs.isEmpty ? Colors.grey : null,
-                    ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedSongs.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -277,7 +283,17 @@ class _VideoFormViewState extends State<VideoFormView> {
                       child: selectedCharacters.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
                     ),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(e.name ?? "")),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: e.name ?? ""),
+                          TextSpan(
+                            text: e.world != null ? " (${e.world?.name ?? ""})" : "",
+                            style: Theme.of(context).textTheme.bodyMedium?.grey,
+                          ),
+                        ]),
+                      ),
+                    ),
                   ],
                 ),
               ))
@@ -300,9 +316,7 @@ class _VideoFormViewState extends State<VideoFormView> {
             Expanded(
               child: Text(
                 selectedCharacters.isEmpty ? "Select characters" : selectedCharacters.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: selectedCharacters.isEmpty ? Colors.grey : null,
-                    ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedCharacters.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -349,9 +363,7 @@ class _VideoFormViewState extends State<VideoFormView> {
             Expanded(
               child: Text(
                 selectedActions.isEmpty ? "Select actions" : selectedActions.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: selectedActions.isEmpty ? Colors.grey : null,
-                    ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedActions.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -364,7 +376,7 @@ class _VideoFormViewState extends State<VideoFormView> {
 
   VideoModel get _buildVideo => VideoModel(
         id: widget.item?.id,
-        localRelativeUrl: widget.item?.localRelativeUrl,
+        localRelativeUrl: localRelativeUrlCtrl.text,
         orientation: selectedOrientation,
         status: selectedStatus,
         songs: selectedSongs,

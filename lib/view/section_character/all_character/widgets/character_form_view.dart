@@ -103,7 +103,11 @@ class _CharacterFormViewState extends State<CharacterFormView> {
               initialValue: selectedWorld,
               onSelected: (result) {
                 setState(() {
-                  selectedWorld = result;
+                  if (selectedWorld == result) {
+                    selectedWorld = null;
+                  } else {
+                    selectedWorld = result;
+                  }
                 });
               },
               child: Padding(

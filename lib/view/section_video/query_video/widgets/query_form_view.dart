@@ -10,6 +10,7 @@ import 'package:mmd2/data/model/song_model.dart';
 import 'package:mmd2/data/model/video_query_model.dart';
 import 'package:mmd2/util/enumi/e_orientation.dart';
 import 'package:mmd2/util/enumi/e_video_status.dart';
+import 'package:mmd2/util/extension/text_style_extension.dart';
 
 class QueryFormView extends StatefulWidget {
   final String title;
@@ -141,9 +142,7 @@ class _QueryFormViewState extends State<QueryFormView> {
             Expanded(
               child: Text(
                 selectedAuthors.isEmpty ? "Select authors" : selectedAuthors.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedAuthors.isEmpty ? Colors.grey : null,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedAuthors.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -158,19 +157,19 @@ class _QueryFormViewState extends State<QueryFormView> {
     return PopupMenuButton(
       itemBuilder: (_) => EOrientation.values
           .map((e) => PopupMenuItem<EOrientation>(
-        value: e,
-        child: Row(
-          children: [
-            SizedBox(
-              height: 16,
-              width: 16,
-              child: selectedOrientations.contains(e) ? const Icon(Icons.check, size: 16) : null,
-            ),
-            const SizedBox(width: 8),
-            Expanded(child: Text(e.title)),
-          ],
-        ),
-      ))
+                value: e,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: 16,
+                      width: 16,
+                      child: selectedOrientations.contains(e) ? const Icon(Icons.check, size: 16) : null,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(e.title)),
+                  ],
+                ),
+              ))
           .toList(),
       tooltip: "Select orientations",
       initialValue: selectedOrientations.lastOrNull,
@@ -190,9 +189,7 @@ class _QueryFormViewState extends State<QueryFormView> {
             Expanded(
               child: Text(
                 selectedOrientations.isEmpty ? "Select orientations" : selectedOrientations.map((e) => e.title).join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedOrientations.isEmpty ? Colors.grey : null,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedOrientations.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -239,9 +236,7 @@ class _QueryFormViewState extends State<QueryFormView> {
             Expanded(
               child: Text(
                 selectedStatus.isEmpty ? "Select status" : selectedStatus.map((e) => e.title).join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedStatus.isEmpty ? Colors.grey : null,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedStatus.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -265,7 +260,17 @@ class _QueryFormViewState extends State<QueryFormView> {
                       child: selectedSongs.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
                     ),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(e.name ?? "")),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: e.name ?? ""),
+                          TextSpan(
+                            text: (e.producers?.length ?? 0) > 0 ? " (${e.producers?.map((e) => e.name ?? "").join(", ")})" : "",
+                            style: Theme.of(context).textTheme.bodyMedium?.grey,
+                          ),
+                        ]),
+                      ),
+                    ),
                   ],
                 ),
               ))
@@ -288,9 +293,7 @@ class _QueryFormViewState extends State<QueryFormView> {
             Expanded(
               child: Text(
                 selectedSongs.isEmpty ? "Select songs" : selectedSongs.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedSongs.isEmpty ? Colors.grey : null,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedSongs.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -314,7 +317,17 @@ class _QueryFormViewState extends State<QueryFormView> {
                       child: selectedCharacters.map((p) => p.id).contains(e.id) ? const Icon(Icons.check, size: 16) : null,
                     ),
                     const SizedBox(width: 8),
-                    Expanded(child: Text(e.name ?? "")),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(text: e.name ?? ""),
+                          TextSpan(
+                            text: e.world != null ? " (${e.world?.name ?? ""})" : "",
+                            style: Theme.of(context).textTheme.bodyMedium?.grey,
+                          ),
+                        ]),
+                      ),
+                    ),
                   ],
                 ),
               ))
@@ -337,9 +350,7 @@ class _QueryFormViewState extends State<QueryFormView> {
             Expanded(
               child: Text(
                 selectedCharacters.isEmpty ? "Select characters" : selectedCharacters.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedCharacters.isEmpty ? Colors.grey : null,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedCharacters.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -386,9 +397,7 @@ class _QueryFormViewState extends State<QueryFormView> {
             Expanded(
               child: Text(
                 selectedActions.isEmpty ? "Select actions" : selectedActions.map((e) => e.name ?? "").join(", "),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: selectedActions.isEmpty ? Colors.grey : null,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: selectedActions.isEmpty ? Colors.grey : null),
               ),
             ),
             const SizedBox(width: 8),
@@ -400,14 +409,14 @@ class _QueryFormViewState extends State<QueryFormView> {
   }
 
   VideoQueryModel get _buildQuery => VideoQueryModel(
-    name: nameCtrl.text,
-    orientations: selectedOrientations,
-    status: selectedStatus,
-    authors: selectedAuthors,
-    songs: selectedSongs,
-    characters: selectedCharacters,
-    actions: selectedActions,
-  );
+        name: nameCtrl.text,
+        orientations: selectedOrientations,
+        status: selectedStatus,
+        authors: selectedAuthors,
+        songs: selectedSongs,
+        characters: selectedCharacters,
+        actions: selectedActions,
+      );
 
   Future<void> _getAllLite() async {
     final response = await Future.wait([
