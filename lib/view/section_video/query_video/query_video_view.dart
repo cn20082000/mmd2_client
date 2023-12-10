@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mmd2/data/client/video_client.dart';
 import 'package:mmd2/data/model/video_model.dart';
 import 'package:mmd2/data/model/video_query_model.dart';
+import 'package:mmd2/util/extension/text_style_extension.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
@@ -45,7 +46,7 @@ class _QueryVideoViewState extends State<QueryVideoView> {
             ),
             const Spacer(),
             const SizedBox(width: 16),
-            TextButton(
+            IconButton(
               onPressed: () {
                 QueryFormView(
                   title: "Filter video",
@@ -56,7 +57,8 @@ class _QueryVideoViewState extends State<QueryVideoView> {
                   },
                 ).showAsDialog(context);
               },
-              child: const Text("Filter video"),
+              icon: const Icon(Icons.filter_alt),
+              tooltip: "Filter video",
             ),
             const SizedBox(width: 8),
             LoadingView(
@@ -65,6 +67,42 @@ class _QueryVideoViewState extends State<QueryVideoView> {
                 tooltip: "Refresh",
                 onPressed: loading ? null : loadingCtrl.reload,
                 icon: const Icon(Icons.refresh),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingButton: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            offset: Offset(4, 4),
+            blurRadius: 4,
+          ),
+        ]),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.done_all,
+              ),
+            ),
+            const SizedBox(width: 8),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                "8 videos",
+                style: Theme.of(context).textTheme.bodyMedium?.bold,
+              ),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.play_arrow,
               ),
             ),
           ],

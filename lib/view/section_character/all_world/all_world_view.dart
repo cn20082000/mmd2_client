@@ -77,7 +77,7 @@ class _AllWorldViewState extends State<AllWorldView> {
           onEdit: () {
             WorldFormView(
               title: "Edit world",
-              item: item,
+              item: item.data,
               onDone: (world) => _updateWorld(world),
             ).showAsDialog(context);
           },
