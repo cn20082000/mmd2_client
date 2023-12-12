@@ -7,8 +7,9 @@ import 'package:mmd2/util/extension/text_style_extension.dart';
 class VideoItemView extends StatelessWidget {
   final VideoModel item;
   final void Function()? onEdit;
+  final void Function()? onCheck;
 
-  const VideoItemView({super.key, required this.item, this.onEdit});
+  const VideoItemView({super.key, required this.item, this.onEdit, this.onCheck});
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +86,10 @@ class VideoItemView extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
+          if (onCheck != null) IconButton(
+            onPressed: onCheck,
+            icon: const Icon(Icons.check),
+          ),
           IconButton(
             onPressed: onEdit,
             icon: const Icon(Icons.edit),

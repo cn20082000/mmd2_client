@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mmd2/data/client/video_client.dart';
 import 'package:mmd2/data/model/video_model.dart';
 import 'package:mmd2/data/model/video_query_model.dart';
+import 'package:mmd2/util/enumi/e_video_status.dart';
 import 'package:mmd2/util/extension/text_style_extension.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
@@ -25,6 +28,7 @@ class _QueryVideoViewState extends State<QueryVideoView> {
   final loadingCtrl = LoadingListController(20);
 
   VideoQueryModel query = VideoQueryModel();
+  final playlist = <VideoModel>[];
 
   @override
   void didChangeDependencies() {
@@ -85,7 +89,7 @@ class _QueryVideoViewState extends State<QueryVideoView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () => _addAllToPlaylist(),
               icon: const Icon(
                 Icons.done_all,
               ),
@@ -94,7 +98,7 @@ class _QueryVideoViewState extends State<QueryVideoView> {
             TextButton(
               onPressed: () {},
               child: Text(
-                "8 videos",
+                "${playlist.length} videos",
                 style: Theme.of(context).textTheme.bodyMedium?.bold,
               ),
             ),
@@ -110,16 +114,28 @@ class _QueryVideoViewState extends State<QueryVideoView> {
       ),
       body: LoadingListView.separated(
         controller: loadingCtrl,
-        itemBuilder: (_, __, item) => VideoItemView(
-          item: item,
-          onEdit: () {
-            VideoFormView(
-              title: "Edit video",
+        itemBuilder: (_, __, item) {
+          if (item is VideoModel) {
+            return VideoItemView(
               item: item,
-              onDone: (video) => _updateVideo(video),
-            ).showAsDialog(context);
-          },
-        ),
+              onEdit: () {
+                VideoFormView(
+                  title: "Edit video",
+                  item: item,
+                  onDone: (video) => _updateVideo(video),
+                ).showAsDialog(context);
+              },
+              onCheck: item.status == EVideoStatus.active
+                  ? () {
+                      setState(() {
+                        playlist.add(item);
+                      });
+                    }
+                  : null,
+            );
+          }
+          return const SizedBox();
+        },
       ),
     );
   }
@@ -130,7 +146,7 @@ class _QueryVideoViewState extends State<QueryVideoView> {
     final response = await videoClient.queryVideo(pageIndex, pageSize, query);
 
     if (response?.data != null) {
-      result.addAll((response?.data?.data ?? []));
+      result.addAll(response?.data?.data ?? []);
     }
 
     return result;
@@ -141,6 +157,23 @@ class _QueryVideoViewState extends State<QueryVideoView> {
 
     if (response?.data != null) {
       loadingCtrl.reload();
+    }
+  }
+
+  Future<void> _addAllToPlaylist() async {
+    if (query.status.isNotEmpty && !query.status.contains(EVideoStatus.active)) {
+      return;
+    }
+
+    final newQuery = VideoQueryModel.fromJson(jsonDecode(jsonEncode(query.toJson())));
+    newQuery.status.clear();
+    newQuery.status.add(EVideoStatus.active);
+
+    final response = await videoClient.queryVideo(0, 999, newQuery);
+    if (response?.data != null) {
+      setState(() {
+        playlist.addAll(response?.data?.data ?? []);
+      });
     }
   }
 }
