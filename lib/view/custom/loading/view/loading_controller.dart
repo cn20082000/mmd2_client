@@ -1,11 +1,8 @@
-import 'package:flutter/widgets.dart';
-
 class LoadingController {
   bool _loading = false;
 
   final List<void Function()?> _listeners = [];
 
-  @protected
   void invokeListeners() {
     for (final element in _listeners) {
       element?.call();

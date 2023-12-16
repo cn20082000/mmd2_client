@@ -11,6 +11,7 @@ import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
 import 'package:mmd2/view/custom/loading/view/loading_view.dart';
 import 'package:mmd2/view/custom/navigation/section_screen.dart';
+import 'package:mmd2/view/section_video/playlist/playlist_view.dart';
 import 'package:mmd2/view/section_video/query_video/widgets/query_form_view.dart';
 import 'package:mmd2/view/section_video/query_video/widgets/video_form_view.dart';
 import 'package:mmd2/view/section_video/query_video/widgets/video_item_view.dart';
@@ -96,7 +97,16 @@ class _QueryVideoViewState extends State<QueryVideoView> {
             ),
             const SizedBox(width: 8),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => PlaylistView(playlist: playlist))).then((value) {
+                  if (value is List) {
+                    setState(() {
+                      playlist.clear();
+                      playlist.addAll(value.map((e) => e as VideoModel));
+                    });
+                  }
+                });
+              },
               child: Text(
                 "${playlist.length} videos",
                 style: Theme.of(context).textTheme.bodyMedium?.bold,
@@ -169,7 +179,7 @@ class _QueryVideoViewState extends State<QueryVideoView> {
     newQuery.status.clear();
     newQuery.status.add(EVideoStatus.active);
 
-    final response = await videoClient.queryVideo(0, 999, newQuery);
+    final response = await videoClient.queryVideo(0, 999999, newQuery);
     if (response?.data != null) {
       setState(() {
         playlist.addAll(response?.data?.data ?? []);

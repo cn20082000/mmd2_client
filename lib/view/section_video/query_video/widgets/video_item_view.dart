@@ -8,8 +8,9 @@ class VideoItemView extends StatelessWidget {
   final VideoModel item;
   final void Function()? onEdit;
   final void Function()? onCheck;
+  final void Function()? onRemove;
 
-  const VideoItemView({super.key, required this.item, this.onEdit, this.onCheck});
+  const VideoItemView({super.key, required this.item, this.onEdit, this.onCheck, this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +87,15 @@ class VideoItemView extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
+          if (onRemove != null) IconButton(
+            onPressed: onRemove,
+            icon: const Icon(Icons.clear),
+          ),
           if (onCheck != null) IconButton(
             onPressed: onCheck,
             icon: const Icon(Icons.check),
           ),
-          IconButton(
+          if (onEdit != null) IconButton(
             onPressed: onEdit,
             icon: const Icon(Icons.edit),
           ),
