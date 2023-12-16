@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mmd2/common/app.dart';
 import 'package:mmd2/data/model/song_model.dart';
 import 'package:mmd2/util/extension/text_style_extension.dart';
-import 'package:mmd2/util/utils.dart';
 import 'package:mmd2/view/custom/list/basic_item.dart';
 
 class SongItemView extends StatelessWidget {
@@ -23,7 +23,7 @@ class SongItemView extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             color: Colors.white,
             child: InkWell(
-              onTap: () => Utils.launchUrl(item.url ?? ""),
+              onTap: () => App.uc.browser.launchUrl.invoke(item.url),
               borderRadius: BorderRadius.circular(8),
               child: const SizedBox(
                 height: 64,

@@ -1,10 +1,10 @@
+import 'package:mmd2/data/enumi/e_orientation.dart';
+import 'package:mmd2/data/enumi/e_video_status.dart';
 import 'package:mmd2/data/model/action_model.dart';
 import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/data/model/base_model.dart';
 import 'package:mmd2/data/model/character_model.dart';
 import 'package:mmd2/data/model/song_model.dart';
-import 'package:mmd2/util/enumi/e_orientation.dart';
-import 'package:mmd2/util/enumi/e_video_status.dart';
 import 'package:mmd2/util/extension/list_ext.dart';
 
 class VideoQueryModel extends IToJson {

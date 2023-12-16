@@ -3,12 +3,12 @@ import 'package:mmd2/data/client/action_client.dart';
 import 'package:mmd2/data/client/author_client.dart';
 import 'package:mmd2/data/client/character_client.dart';
 import 'package:mmd2/data/client/song_client.dart';
+import 'package:mmd2/data/enumi/e_orientation.dart';
+import 'package:mmd2/data/enumi/e_video_status.dart';
 import 'package:mmd2/data/model/action_model.dart';
 import 'package:mmd2/data/model/character_model.dart';
 import 'package:mmd2/data/model/song_model.dart';
 import 'package:mmd2/data/model/video_model.dart';
-import 'package:mmd2/util/enumi/e_orientation.dart';
-import 'package:mmd2/util/enumi/e_video_status.dart';
 import 'package:mmd2/util/extension/text_style_extension.dart';
 
 class VideoFormView extends StatefulWidget {

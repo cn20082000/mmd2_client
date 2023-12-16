@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mmd2/data/client/video_client.dart';
+import 'package:mmd2/data/enumi/e_video_status.dart';
 import 'package:mmd2/data/model/video_model.dart';
 import 'package:mmd2/data/model/video_query_model.dart';
-import 'package:mmd2/util/enumi/e_video_status.dart';
 import 'package:mmd2/util/extension/text_style_extension.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';

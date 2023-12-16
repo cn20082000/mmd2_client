@@ -6,7 +6,6 @@ import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/util/extension/date_ext.dart';
 import 'package:mmd2/util/extension/string_ext.dart';
 import 'package:mmd2/util/extension/text_style_extension.dart';
-import 'package:mmd2/util/utils.dart';
 import 'package:mmd2/view/custom/list/basic_item.dart';
 
 class AuthorItemView extends StatelessWidget {
@@ -51,7 +50,7 @@ class AuthorItemView extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     IconButton.filledTonal(
-                      onPressed: () => Utils.launchUrl(item.profileUrl ?? ""),
+                      onPressed: () => App.uc.browser.launchUrl.invoke(item.profileUrl),
                       icon: const Icon(Icons.call_made),
                     ),
                   ],

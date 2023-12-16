@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mmd2/data/client/action_client.dart';
+import 'package:mmd2/common/app.dart';
 import 'package:mmd2/data/model/action_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
@@ -17,8 +17,6 @@ class AllActionView extends StatefulWidget {
 }
 
 class _AllActionViewState extends State<AllActionView> {
-  final actionClient = ActionClient();
-
   final loadingCtrl = LoadingListController(20);
 
   @override
@@ -81,7 +79,7 @@ class _AllActionViewState extends State<AllActionView> {
   Future<List<ActionModel>> _getData(int pageIndex, int pageSize) async {
     final result = <ActionModel>[];
 
-    final response = await actionClient.getPagingAction(pageIndex, pageSize);
+    final response = await App.uc.action.getPagingAction.invoke(pageIndex, pageSize);
     if (response?.data != null) {
       result.clear();
       result.addAll(response?.data?.data ?? []);
@@ -91,7 +89,7 @@ class _AllActionViewState extends State<AllActionView> {
   }
 
   Future<void> _createAction(ActionModel action) async {
-    final response = await actionClient.createAction(action);
+    final response = await App.uc.action.createAction.invoke(action);
 
     if (response?.data != null) {
       loadingCtrl.reload();
@@ -99,7 +97,7 @@ class _AllActionViewState extends State<AllActionView> {
   }
 
   Future<void> _updateAction(ActionModel action) async {
-    final response = await actionClient.updateAction(action);
+    final response = await App.uc.action.updateAction.invoke(action);
 
     if (response?.data != null) {
       loadingCtrl.reload();
