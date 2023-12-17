@@ -32,7 +32,7 @@ class ActionItemView extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-          IconButton(
+          if (onEdit != null) IconButton(
             onPressed: onEdit,
             icon: const Icon(Icons.edit),
           ),

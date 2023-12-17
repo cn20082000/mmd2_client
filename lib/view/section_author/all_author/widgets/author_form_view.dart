@@ -8,10 +8,9 @@ import 'package:mmd2/util/extension/string_ext.dart';
 class AuthorFormView extends StatefulWidget {
   final String title;
   final AuthorModel? item;
-  final Future<AuthorModel?> Function(AuthorModel)? onPreview;
   final void Function(AuthorModel)? onDone;
 
-  const AuthorFormView({super.key, required this.title, this.item, this.onDone, this.onPreview});
+  const AuthorFormView({super.key, required this.title, this.item, this.onDone});
 
   @override
   State<AuthorFormView> createState() => _AuthorFormViewState();
@@ -164,10 +163,10 @@ class _AuthorFormViewState extends State<AuthorFormView> {
       );
 
   Future<void> _previewAuthor() async {
-    final previewItem = await widget.onPreview?.call(_buildAuthor);
+    final previewItem = await App.uc.author.previewAuthor.invoke(_buildAuthor);
 
     setState(() {
-      item = previewItem;
+      item = previewItem?.data;
     });
     nameCtrl.text = item?.name ?? "";
     profileUrlCtrl.text = item?.profileUrl ?? "";

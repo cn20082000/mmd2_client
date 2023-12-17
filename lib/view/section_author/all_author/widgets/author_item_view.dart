@@ -44,11 +44,11 @@ class AuthorItemView extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton.filledTonal(
+                    if (onEdit != null) IconButton.filledTonal(
                       onPressed: onEdit,
                       icon: const Icon(Icons.edit),
                     ),
-                    const SizedBox(width: 4),
+                    if (onEdit != null) const SizedBox(width: 4),
                     IconButton.filledTonal(
                       onPressed: () => App.uc.browser.launchUrl.invoke(item.profileUrl),
                       icon: const Icon(Icons.call_made),

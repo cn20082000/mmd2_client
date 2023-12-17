@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mmd2/data/client/author_client.dart';
+import 'package:mmd2/common/app.dart';
 import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
@@ -18,8 +18,6 @@ class AllAuthorView extends StatefulWidget {
 }
 
 class _AllAuthorViewState extends State<AllAuthorView> {
-  final authorClient = AuthorClient();
-
   final loadingCtrl = LoadingListController(20);
 
   @override
@@ -57,7 +55,6 @@ class _AllAuthorViewState extends State<AllAuthorView> {
         onPressed: () {
           AuthorFormView(
             title: "Add new author",
-            onPreview: _previewAuthor,
             onDone: (author) => _createAuthor(author),
           ).showAsDialog(context);
         },
@@ -72,7 +69,6 @@ class _AllAuthorViewState extends State<AllAuthorView> {
             AuthorFormView(
               title: "Update author",
               item: item,
-              onPreview: _previewAuthor,
               onDone: (author) => _updateAuthor(author),
             ).showAsDialog(context);
           },
@@ -87,7 +83,7 @@ class _AllAuthorViewState extends State<AllAuthorView> {
   Future<List<AuthorModel>> _getData(int pageIndex, int pageSize) async {
     final result = <AuthorModel>[];
 
-    final response = await authorClient.getPagingAuthor(pageIndex, pageSize);
+    final response = await App.uc.author.getPagingAuthor.invoke(pageIndex, pageSize);
     if (response?.data != null) {
       result.addAll(response?.data?.data ?? []);
     }
@@ -95,14 +91,8 @@ class _AllAuthorViewState extends State<AllAuthorView> {
     return result;
   }
 
-  Future<AuthorModel?> _previewAuthor(AuthorModel author) async {
-    final response = await authorClient.previewAuthor(author);
-
-    return response?.data;
-  }
-
   Future<void> _createAuthor(AuthorModel author) async {
-    final response = await authorClient.createAuthor(author);
+    final response = await App.uc.author.createAuthor.invoke(author);
 
     if (response?.data != null) {
       loadingCtrl.reload();
@@ -110,7 +100,7 @@ class _AllAuthorViewState extends State<AllAuthorView> {
   }
 
   Future<void> _updateAuthor(AuthorModel author) async {
-    final response = await authorClient.updateAuthor(author);
+    final response = await App.uc.author.updateAuthor.invoke(author);
 
     if (response?.data != null) {
       loadingCtrl.reload();
