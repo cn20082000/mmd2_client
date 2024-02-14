@@ -163,7 +163,7 @@ class _AuthorFormViewState extends State<AuthorFormView> {
       );
 
   Future<void> _previewAuthor() async {
-    final previewItem = await App.uc.author.previewAuthor.invoke(_buildAuthor);
+    final previewItem = await App.uc.author.preview.invoke(_buildAuthor);
 
     setState(() {
       item = previewItem?.data;

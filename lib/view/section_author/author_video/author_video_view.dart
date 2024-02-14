@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mmd2/data/client/author_client.dart';
-import 'package:mmd2/data/client/video_client.dart';
+import 'package:mmd2/common/app.dart';
 import 'package:mmd2/data/model/author_model.dart';
 import 'package:mmd2/data/model/video_model.dart';
-import 'package:mmd2/data/model/video_query_model.dart';
 import 'package:mmd2/util/extension/widget_ext.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_controller.dart';
 import 'package:mmd2/view/custom/loading/list/loading_list_view.dart';
@@ -22,9 +20,6 @@ class AuthorVideoView extends StatefulWidget {
 }
 
 class _AuthorVideoViewState extends State<AuthorVideoView> {
-  final videoClient = VideoClient();
-  final authorClient = AuthorClient();
-
   final loadingCtrl = LoadingListController(20);
 
   @override
@@ -90,7 +85,7 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
   Future<List<VideoModel>> _getData(int pageIndex, int pageSize) async {
     final result = <VideoModel>[];
 
-    final response = await videoClient.queryVideo(pageIndex, pageSize, VideoQueryModel(authors: [widget.author]));
+    final response = await App.uc.video.getPagingByAuthor.invoke(pageIndex, pageSize, widget.author);
 
     if (response?.data != null) {
       result.addAll((response?.data?.data ?? []));
@@ -101,7 +96,7 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
 
   Future<void> _syncVideo() async {
     loadingCtrl.loading = true;
-    final response = await authorClient.syncVideo(widget.author);
+    final response = await App.uc.author.syncVideo.invoke(widget.author);
     loadingCtrl.loading = false;
 
     if (response?.data != null) {
@@ -110,7 +105,7 @@ class _AuthorVideoViewState extends State<AuthorVideoView> {
   }
 
   Future<void> _updateVideo(VideoModel video) async {
-    final response = await videoClient.updateVideo(video);
+    final response = await App.uc.video.update.invoke(video);
 
     if (response?.data != null) {
       loadingCtrl.reload();
