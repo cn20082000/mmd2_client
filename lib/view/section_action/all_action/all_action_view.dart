@@ -79,7 +79,7 @@ class _AllActionViewState extends State<AllActionView> {
   Future<List<ActionModel>> _getData(int pageIndex, int pageSize) async {
     final result = <ActionModel>[];
 
-    final response = await App.uc.action.getPagingAction.invoke(pageIndex, pageSize);
+    final response = await App.uc.action.getPaging.invoke(pageIndex, pageSize);
     if (response?.data != null) {
       result.clear();
       result.addAll(response?.data?.data ?? []);
@@ -89,7 +89,7 @@ class _AllActionViewState extends State<AllActionView> {
   }
 
   Future<void> _createAction(ActionModel action) async {
-    final response = await App.uc.action.createAction.invoke(action);
+    final response = await App.uc.action.create.invoke(action);
 
     if (response?.data != null) {
       loadingCtrl.reload();
@@ -97,7 +97,7 @@ class _AllActionViewState extends State<AllActionView> {
   }
 
   Future<void> _updateAction(ActionModel action) async {
-    final response = await App.uc.action.updateAction.invoke(action);
+    final response = await App.uc.action.update.invoke(action);
 
     if (response?.data != null) {
       loadingCtrl.reload();

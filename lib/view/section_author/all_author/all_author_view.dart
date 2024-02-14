@@ -83,7 +83,7 @@ class _AllAuthorViewState extends State<AllAuthorView> {
   Future<List<AuthorModel>> _getData(int pageIndex, int pageSize) async {
     final result = <AuthorModel>[];
 
-    final response = await App.uc.author.getPagingAuthor.invoke(pageIndex, pageSize);
+    final response = await App.uc.author.getPaging.invoke(pageIndex, pageSize);
     if (response?.data != null) {
       result.addAll(response?.data?.data ?? []);
     }
@@ -92,7 +92,7 @@ class _AllAuthorViewState extends State<AllAuthorView> {
   }
 
   Future<void> _createAuthor(AuthorModel author) async {
-    final response = await App.uc.author.createAuthor.invoke(author);
+    final response = await App.uc.author.create.invoke(author);
 
     if (response?.data != null) {
       loadingCtrl.reload();
@@ -100,7 +100,7 @@ class _AllAuthorViewState extends State<AllAuthorView> {
   }
 
   Future<void> _updateAuthor(AuthorModel author) async {
-    final response = await App.uc.author.updateAuthor.invoke(author);
+    final response = await App.uc.author.update.invoke(author);
 
     if (response?.data != null) {
       loadingCtrl.reload();
